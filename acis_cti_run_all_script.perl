@@ -14,12 +14,14 @@
 #--- set directories
 #
 $cti_www       = '/data/mat/www/mt_cti/';
+$cti_www       = '/data/mat/www/mt_cti/Test2';
 
 $house_keeping = '/house_keeping/';
 
 $exc_dir       = '/data/mta/Script/ACIS/CTI/Exc/';
+$exc_dir       = '/data/mta/Script/ACIS/CTI/Temp/';
 
-$bin_dir       = '/data/mta4/MTA/bin';
+$bin_dir       = '/data/mta4/MTA/bin/';
 
 $ftools        = '/home/ascds/DS.release/otsbin/';
 
