@@ -29,8 +29,10 @@ $ftools        = $dir_list[4];
 #
 #########################################
 
-$dare   =`cat $bin_dir/.dare`;
-$hakama =`cat $bin_dir/.hakama`;
+$bin_data = '/data/mta4/MTA/data/';
+
+$dare   =`cat $bin_data/.dare`;
+$hakama =`cat $bin_data/.hakama`;
 chomp $dare;
 chomp $hakama;
 

@@ -1,20 +1,25 @@
 #!/usr/bin/perl
 
-##############################################################################
+#################################################################################
+#										#
+#	acis_cti_run_all_script.perl: this is a control script for cti comp	#
+#										#
+#	author: t. isobe (tiosbe@cfa.harvard.edu)				#
+#										#
+#	last update: Jun 30, 2005						#
+#										#
+#################################################################################
 
 #########################################
 #--- set directories
 #
 $cti_www       = '/data/mat/www/mt_cti/';
-$cti_www       = '/data/mta/www/mta_cti/Test2/';
 
 $house_keeping = '/house_keeping/';
 
 $exc_dir       = '/data/mta/Script/ACIS/CTI/Exc/';
-$exc_dir       = '/data/mta/Script/ACIS/CTI/Temp/';
 
 $bin_dir       = '/data/mta4/MTA/bin';
-$bin_dir       = '/data/mta/Script/ACIS/CTI/Temp/Script';
 
 $ftools        = '/home/ascds/DS.release/otsbin/';
 
@@ -128,6 +133,7 @@ system("perl $bin_dir/acis_cti_new_det_plot_only_part.perl");
 #
 #----  update the html page
 #
+
 ($usec, $umin, $uhour, $umday, $umon, $uyear, $uwday, $uyday, $uisdst)= localtime(time);
 
 $year  = 1900   + $uyear;
@@ -139,7 +145,7 @@ open(OUT, ">$exc_dir/Working_dir/date_file");
 print OUT "\n$line\n";
 close(OUT);
 
-system("cat $cti_www/$house_keeping/cti_page.html $exc_dir/Working_dir/date_file >> $cti_www/cti_page.html");
+system("cat $cti_www/$house_keeping/cti_page.html $exc_dir/Working_dir/date_file > $cti_www/cti_page.html");
 
 #
 #--- cleaning up

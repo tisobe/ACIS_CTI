@@ -194,7 +194,7 @@ if($in_count > 0) {
 
 	system("rm -rf  $exc_dir/Working_dir/tempdir");
 
-      	open(BOUT,">$cti_www/$house_keep/keep_entry");		# find whether any data was not processedw
+      	open(BOUT,">$cti_www/$house_keeping/keep_entry");	# find whether any data was not processedw
 	OUTER:							# if there are, keep them for the next time
 	foreach $new (@new_entry){
 		foreach $tmp (@chk_list) {
