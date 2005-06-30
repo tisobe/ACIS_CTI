@@ -1,0 +1,11 @@
+source /home/mta/.ascrc 
+
+cd /data/mta/Script/ACIS/CTI/Temp/
+rm -rf param
+mkdir param
+source /home/mta/bin/reset_param
+setenv PFILES "${PDIRS}:${SYSPFILES}" 
+set path = (/home/ascds/DS.release/bin/  $path)
+setenv MTA_REPORT_DIR  /data/mta/Script/ACIS/CTI/Temp/Temp_comp_area
+
+perl acis_cti_run_all_script.perl
