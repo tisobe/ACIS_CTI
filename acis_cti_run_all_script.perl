@@ -126,6 +126,22 @@ system("perl $bin_dir/acis_cti_new_det_plot_only.perl");
 system("perl $bin_dir/acis_cti_new_det_plot_only_part.perl");
 
 #
+#----  update the html page
+#
+($usec, $umin, $uhour, $umday, $umon, $uyear, $uwday, $uyday, $uisdst)= localtime(time);
+
+$year  = 1900   + $uyear;
+$month = $umon  + 1;
+
+$line = "<br><br><H3> Last Update: $month/$umday/$year</H3><br>";
+
+open(OUT, ">$exc_dir/Working_dir/date_file");
+print OUT "\n$line\n";
+close(OUT);
+
+system("cat $cti_www/$house_keeping/cti_page.html $exc_dir/Working_dir/date_file >> $cti_www/cti_page.html");
+
+#
 #--- cleaning up
 #
 
