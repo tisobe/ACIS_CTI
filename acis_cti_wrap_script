@@ -1,2 +1,2 @@
-/bin/tcsh  < /data/mta/Script/ACIS/CTI/Temp/plot_script
+/bin/tcsh  < /data/mta4/MTA/bin/acis_cti_plot_script
 
