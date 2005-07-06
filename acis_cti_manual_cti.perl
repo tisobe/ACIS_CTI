@@ -167,7 +167,8 @@ foreach $line (@data_list){
 		chomp $_;
 		$dir = $_;
 		@gtemp = split(/\//, $dir);
-		$ccd = $gtemp[12];
+		shift @gtemp;
+		$ccd = shift @gtemp;
 		read_ccd();
 		$ccd_out = "$ccd";
 		open(OUT, ">>$cti_www/Results/al_$ccd_out");
