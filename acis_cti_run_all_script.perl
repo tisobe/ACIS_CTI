@@ -13,8 +13,8 @@
 #########################################
 #--- set directories
 #
-$cti_www       = '/data/mta/www/mt_cti/';
-$cti_www       = '/data/mta/www/mt_cti/Test2';
+$cti_www       = '/data/mta/www/mta_cti/';
+$cti_www       = '/data/mta/www/mta_cti/Test2';
 
 $house_keeping = '/house_keeping/';
 
