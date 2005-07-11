@@ -6,7 +6,7 @@
 #										#
 #	author: t. isobe (tiosbe@cfa.harvard.edu)				#
 #										#
-#	last update: Jun 30, 2005						#
+#	last update: Jul 11, 2005						#
 #										#
 #################################################################################
 
@@ -14,12 +14,10 @@
 #--- set directories
 #
 $cti_www       = '/data/mta/www/mta_cti/';
-$cti_www       = '/data/mta/www/mta_cti/Test2';
 
 $house_keeping = '/house_keeping/';
 
 $exc_dir       = '/data/mta/Script/ACIS/CTI/Exc/';
-$exc_dir       = '/data/mta/Script/ACIS/CTI/Temp/';
 
 $bin_dir       = '/data/mta4/MTA/bin/';
 
