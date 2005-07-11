@@ -206,6 +206,15 @@ foreach $elem (al, mn, ti){
 		close(OUT);
 		system("mv ztemp $out_file");
 	}
+
+	($usec, $umin, $uhour, $umday, $umon, $uyear, $uwday, $uyday, $uisdst)= localtime(time);
+
+	$year  = 1900   + $uyear;
+	$month = $umon  + 1;
+
+	print ZOUT "/n/n Last Update: $month/$umday/$year\n";
+	close(ZOUT);
+
 }
 
 

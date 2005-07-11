@@ -50,7 +50,14 @@ group_plot_spec_bi(7);
 
 open (OUT, ">$plot_dir/fitting_result");
 
-print OUT "CTI change per Day\n\n";
+($usec, $umin, $uhour, $umday, $umon, $uyear, $uwday, $uyday, $uisdst)= localtime(time);
+
+$year  = 1900   + $uyear;
+$month = $umon  + 1;
+
+$date_line = "$month/$umday/$year";
+
+print OUT "CTI change per Day (Last Update: $date_line)\n\n";
 foreach $elm (al, mn, ti){
 	if($elm eq 'al'){
 		print OUT "Al K alpha\n";
