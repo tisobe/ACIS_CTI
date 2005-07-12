@@ -44,7 +44,7 @@ group_plot_imaging();
 group_plot_spec_wo_bi();
 
 
-open (OUT, ">$exc_dir/Working_dir/fitting_result");
+open (OUT, ">$plot_dir/fitting_result");
 
 ($usec, $umin, $uhour, $umday, $umon, $uyear, $uwday, $uyday, $uisdst)= localtime(time);
 
