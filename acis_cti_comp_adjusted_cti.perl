@@ -212,7 +212,7 @@ foreach $elem (al, mn, ti){
 	$year  = 1900   + $uyear;
 	$month = $umon  + 1;
 
-	print ZOUT "/n/n Last Update: $month/$umday/$year\n";
+	print ZOUT "\n\n Last Update: $month/$umday/$year\n";
 	close(ZOUT);
 
 }
