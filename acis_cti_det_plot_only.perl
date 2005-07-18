@@ -700,7 +700,7 @@ sub group_plot_imaging {
                 }
 		$yavg = $ysum/$total;   # this is used to set a plot range
                 least_fit();
-		%{img__fit_result.$elem} = (slope => ["$slope"],
+		%{img_fit_result.$elem} = (slope => ["$slope"],
 		slope_err => ["$sigm_slope"]);
                 $fit = 1;
                 $ybeg = $int + $slope*$xmin;
