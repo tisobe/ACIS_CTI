@@ -40,8 +40,10 @@ $ftools        = $dir_list[4];
 #
 #########################################
 
-$dare   =`cat $bin_dir/.dare`;
-$hakama =`cat $bin_dir/.hakama`;
+$bdat_dir = '/data/mta4/MTA/data/';
+
+$dare   =`cat $bdat_dir/.dare`;
+$hakama =`cat $bdat_dir/.hakama`;
 chomp $dare;
 chomp $hakama;
 
@@ -53,7 +55,6 @@ system("cp $cti_www/$house_keeping/amp_avg_list $cti_www/$house_keeping/amp_avg_
 #----- new_entry: today's entry list from plot_cti.perl
 #
 system("cat $exc_dir/Working_dir/new_entry > $exc_dir/Working_dir/test_list");
-#
 #---- combine left over and a new list
 #
 system("cat $cti_www/$house_keeping/keep_entry >> $exc_dir/Working_dir/test_list");
@@ -69,7 +70,7 @@ $amp_cnt = 0;
 while(<FH>){
 	chomp $_;
 	@atemp = split(/\s+/,$_);
-	push(@amp_obsid, $atemp[1]);	# we need obsid list from amp_avg_list
+	push(@amp_obsid, $atemp[2]);	# we need obsid list from amp_avg_list
 	$amp_cnt++;
 }
 close(FH);
@@ -124,7 +125,7 @@ if($in_count > 0) {
 #	using arc4gl, retreive stat files
 #
 ###########
-	`cd $exc_dir/Working_dir/tempdir/; echo $hakama |arc4gl -U$dare -Sarcocc -i$exc_dir/Working_dir/input_line`;
+	system("cd $exc_dir/Working_dir/tempdir/; echo $hakama |arc4gl -U$dare -Sarcocc -i$exc_dir/Working_dir/input_line");
 ###########
 	system("rm $exc_dir/Working_dir/input_line");
 

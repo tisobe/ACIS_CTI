@@ -6,6 +6,6 @@ mkdir param
 source /home/mta/bin/reset_param
 setenv PFILES "${PDIRS}:${SYSPFILES}" 
 set path = (/home/ascds/DS.release/bin/  $path)
-setenv MTA_REPORT_DIR  /data/mta/Script/ACIS/CTI/Temp/Temp_comp_area
+setenv MTA_REPORT_DIR  /data/mta/Script/ACIS/CTI/Exc/Temp_comp_area
 
 perl /data/mta4/MTA/bin/acis_cti_run_all_script.perl
