@@ -13,13 +13,13 @@
 #########################################
 #--- set directories
 #
-$cti_www       = '/data/mta/www/mta_cti_test/';
+$cti_www       = '/data/mta/www/mta_cti/';
 
 $house_keeping = '/house_keeping/';
 
-$exc_dir       = '/data/mta/Script/ACIS/CTI/Exc2/';
+$exc_dir       = '/data/mta/Script/ACIS/CTI/Exc/';
 
-$bin_dir       = '/data/mta/Script/ACIS/CTI/Test/ACIS_CTI/';
+$bin_dir       = '/data/mta4/MTA/bin/';
 #
 #########################################
 
