@@ -8,7 +8,7 @@ use PGPLOT;
 #		    and Int time > 7000 sec, and temp adjucted plot)	#
 #									#
 #	author: T. Isobe (tisobe@cfa.harvard.edu)			#
-#	last update: Jun282, 2004					#
+#	last update: Aug 10, 2004					#
 #									#
 #########################################################################
 
@@ -25,8 +25,6 @@ $house_keeping = $dir_list[1];
 $exc_dir       = $dir_list[2];
 
 $bin_dir       = $dir_list[3];
-
-$ftools        = $dir_list[4];
 #
 #########################################
 

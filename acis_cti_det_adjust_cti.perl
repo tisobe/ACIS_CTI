@@ -11,7 +11,7 @@
 #									#
 #                                                                       #
 #       auther: T. Isobe (tisobe@cfa.harvard.edu)                       #
-#       Last Update: Jun 21, 2005                                       #
+#       Last Update: Aug 10, 2005                                       #
 #		modified to fit a new directry system			#
 #									#
 #########################################################################
@@ -29,8 +29,6 @@ $house_keeping = $dir_list[1];
 $exc_dir       = $dir_list[2];
 
 $bin_dir       = $dir_list[3];
-
-$ftools        = $dir_list[4];
 #
 #########################################
 

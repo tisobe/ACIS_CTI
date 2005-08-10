@@ -6,23 +6,20 @@
 #										#
 #	author: t. isobe (tiosbe@cfa.harvard.edu)				#
 #										#
-#	last update: Jul 11, 2005						#
+#	last update: Aug 10, 2005						#
 #										#
 #################################################################################
 
 #########################################
 #--- set directories
 #
-$cti_www       = '/data/mta/www/mta_cti/';
+$cti_www       = '/data/mta/www/mta_cti_test/';
 
 $house_keeping = '/house_keeping/';
 
-$exc_dir       = '/data/mta/Script/ACIS/CTI/Exc/';
+$exc_dir       = '/data/mta/Script/ACIS/CTI/Exc2/';
 
-$bin_dir       = '/data/mta4/MTA/bin/';
-
-$ftools        = '/home/ascds/DS.release/otsbin/';
-
+$bin_dir       = '/data/mta/Script/ACIS/CTI/Test/ACIS_CTI/';
 #
 #########################################
 
@@ -35,7 +32,6 @@ print OUT "$cti_www\n";		#a directory where all output go
 print OUT "$house_keeping\n";	#a directory where records are kept
 print OUT "$exc_dir\n";		#a directory where computations are done	
 print OUT "$bin_dir\n";		#a directory where scripts are kept
-print OUT "$ftools\n";		#a directory where ftools are kept
 close(OUT);
 
 #

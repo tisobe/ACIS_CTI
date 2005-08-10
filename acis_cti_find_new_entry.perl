@@ -7,7 +7,7 @@
 #		and	/data/mta/www/mp_reports/photons/acis/cti/5*			#
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
-#	last update: Jun 14, 2005							#
+#	last update: Aug 10, 2005							#
 #		copied from an old script						#
 #											#
 #########################################################################################
@@ -25,8 +25,6 @@ $house_keeping = $dir_list[1];
 $exc_dir       = $dir_list[2];
 
 $bin_dir       = $dir_list[3];
-
-$ftools        = $dir_list[4];
 #
 #########################################
 

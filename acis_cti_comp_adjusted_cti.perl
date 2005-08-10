@@ -6,7 +6,7 @@
 #			        dependency of CTI, and modify the data		#
 #										#
 #	Author: T. Isobe (tisobe@cfa.harvard.edu)				#
-#	Last update: Jun 15, 2005						#
+#	Last update: Aug 10, 2005						#
 #		modified to fit a new directory system				#
 #										#
 #################################################################################
@@ -24,8 +24,6 @@ $house_keeping = $dir_list[1];
 $exc_dir       = $dir_list[2];
 
 $bin_dir       = $dir_list[3];
-
-$ftools        = $dir_list[4];
 #
 #########################################
 

@@ -6,7 +6,7 @@ use PGPLOT;
 # det_plot_only.perl: a plot routine for detrended data			#
 #									#
 #	author: T. Isobe (tisobe@cfa.harvard.edu)			#
-#	Last update: Jun 21, 2005					#
+#	Last update: aug 10, 2005					#
 #########################################################################
 
 #########################################
@@ -22,8 +22,6 @@ $house_keeping = $dir_list[1];
 $exc_dir       = $dir_list[2];
 
 $bin_dir       = $dir_list[3];
-
-$ftools        = $dir_list[4];
 #
 #########################################
 

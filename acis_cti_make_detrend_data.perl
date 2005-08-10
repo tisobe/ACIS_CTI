@@ -5,7 +5,7 @@
 # make_detrend_data.perl: add detrend correction and create new dataset	#
 #									#
 #	author: T. Isobe (tisobe@cfa.harvard.edu)			#
-#	last update: Jun 15, 2005					#
+#	last update: Agu 10, 2005					#
 #		modified to fit a new directry system			#
 #									#
 #########################################################################
@@ -23,8 +23,6 @@ $house_keeping = $dir_list[1];
 $exc_dir       = $dir_list[2];
 
 $bin_dir       = $dir_list[3];
-
-$ftools        = $dir_list[4];
 #
 #########################################
 

@@ -7,7 +7,7 @@
 #   this is just a combination of two script, previously separate	#
 #									#
 #	Author: T. Isobe (tisobe@cfa.harvard.edu)			#
-#	Last update: Jun 21, 2005					#
+#	Last update: Aug 10, 2005					#
 #		modified to fit a new directory system			#
 #									#
 #########################################################################
@@ -25,8 +25,6 @@ $house_keeping = $dir_list[1];
 $exc_dir       = $dir_list[2];
 
 $bin_dir       = $dir_list[3];
-
-$ftools        = $dir_list[4];
 #
 #########################################
 
@@ -85,16 +83,17 @@ sub find_temp_range{
 	@btemp = split(/acisf/,$file);
 	@ctemp = split(/_/, $btemp[1]);
 	$msid = $ctemp[0];
-	system("$ftools/fdump $file $exc_dir/Working_dir/zdump - 1 clobber=yes");
+
+	system("dmlist infile=$file opt=head  outfile=$exc_dir/Working_dir/zdump");
 	open(FH, "$exc_dir/Working_dir/zdump");
 	OUTER:
 	while(<FH>){
 		chomp $_;
 		if($_ =~ /DATE-OBS/i){
-			@atemp = split(/\'/,$_);
-			@btemp = split(/T/, $atemp[1]);
+			@atemp = split(/\s+/,$_);
+			@btemp = split(/T/, $atemp[2]);
 			@ctemp = split(/-/, $btemp[0]);
-			$tstart = $atemp[1];
+			$tstart = $atemp[2];
 			$tstart =~ s/\s+//g;
 			$syear = $ctemp[0];
 			$smon  = $ctemp[1];
@@ -115,10 +114,10 @@ sub find_temp_range{
 			conv_time_1998();
 			$st1998 = $t1998;
 		}elsif($_ =~ /DATE-END/i){
-			@atemp = split(/\'/,$_);
-			@btemp = split(/T/, $atemp[1]);
+			@atemp = split(/\s+/,$_);
+			@btemp = split(/T/, $atemp[2]);
 			@ctemp = split(/-/, $btemp[0]);
-			$tstop = $atemp[1];
+			$tstop = $atemp[2];
 			$tstop =~ s/\s+//g;
 			$eyear = $ctemp[0];
 			$emon  = $ctemp[1];
@@ -147,18 +146,19 @@ sub find_temp_range{
 #
 #### find actual starting time and stop time of the data set
 #
-	system("$ftools/fstatistic $file time - outfile=$exc_dir/Working_dir/zstat clobber=yes");
+	$line = "$file".'[cols time]';
+	system("dmstat infile=\"$line\" centroid=no > $exc_dir/Working_dir/zstat");
 	open(FH, "$exc_dir/Working_dir/zstat");
 	while(<FH>){
 		chomp $_;
-		if($_ =~ /The minimum/){
-			@atemp = split(/is/,$_);
-			$begin = $atemp[1];
+		if($_ =~ /min/){
+			@atemp = split(/\s+/,$_);
+			$begin = $atemp[2];
 			$begin =~ s/\s+//g;
 		}
-		if($_ =~ /The maximum/){
-			@atemp = split(/is/,$_);
-			$end = $atemp[1];
+		if($_ =~ /max/){
+			@atemp = split(/\s+/,$_);
+			$end = $atemp[2];
 			$end =~ s/\s+//g;
 		}
 	}

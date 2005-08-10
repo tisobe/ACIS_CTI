@@ -11,7 +11,7 @@
 #			  and the integration time is no less than 7000	#
 #									#
 #	auther: T. Isobe (tisobe@cfa.harvard.edu)			#
-#	Last Update: Jun 15, 2005					#
+#	Last Update: Aug 10, 2005					#
 #########################################################################
 
 #########################################
@@ -27,8 +27,6 @@ $house_keeping = $dir_list[1];
 $exc_dir       = $dir_list[2];
 
 $bin_dir       = $dir_list[3];
-
-$ftools        = $dir_list[4];
 #
 #########################################
 

@@ -18,7 +18,7 @@ use PGPLOT;
 #										#
 #	author: Takashi Isobe (tisobe@cfa.harvard.edu)				#
 #										#
-#	last update: Jun 10, 2004						#
+#	last update: Aug 10, 2004						#
 #										#
 #################################################################################
 
@@ -35,8 +35,6 @@ $house_keeping = $dir_list[1];
 $exc_dir       = $dir_list[2];
 
 $bin_dir       = $dir_list[3];
-
-$ftools        = $dir_list[4];
 #
 #########################################
 
@@ -124,9 +122,9 @@ if($in_count > 0) {
 #
 #	using arc4gl, retreive stat files
 #
-###########
+
 	system("cd $exc_dir/Working_dir/tempdir/; echo $hakama |arc4gl -U$dare -Sarcocc -i$exc_dir/Working_dir/input_line");
-###########
+
 	system("rm $exc_dir/Working_dir/input_line");
 
 	system("gzip -d $exc_dir/Working_dir/tempdir/*.gz");
@@ -143,22 +141,24 @@ if($in_count > 0) {
 		push(@chk_list, $obsid);
 		                                        # get a date from the fits file
 
-        	system("$ftools/fkeyprint infile=$fits_file keynam=date-obs outfile=$exc_dir/Working_dir/outfile exact=no");
+		system("dmlist $fits_file opt=head outfile=$exc_dir/Working_dir/outfile");
+
         	open(IN,"$exc_dir/Working_dir/outfile");
         	OUTER:
         	while(<IN>){
                 	chomp $_;
                 	@atemp = split(/\'/, $_);
-                	if($atemp[0] eq 'DATE-OBS= '){
-                        	$date_obs = $atemp[1];
+                	if($_ =~ /DATE-OBS/){
+                        	$date_obs = $atemp[2];
                         	last OUTER;
                 	}
         	}
 		close(IN);
         	system("rm  $exc_dir/Working_dir/outfile");
 
-		$infile="$fits_file".'+1';
-		system("$ftools/fdump infile=$infile outfile=$exc_dir/Working_dir/ztemp columns=ccd_id,drop_amp rows=-");
+		$infile = "$fits_file".['cols ccd_id,drop_amp]';
+		system("dmlist infile=\"$infile\" opt=data outfile=$exc_dir/Working_dir/ztemp");
+
 		@data  = ();
 		$sum   = 0;
 		$count = 0;

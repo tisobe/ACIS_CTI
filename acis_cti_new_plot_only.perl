@@ -6,7 +6,7 @@ use PGPLOT;
 # acis_cti_new_plot_only.perl: plot time vs cti evolution 		#
 #									#
 #	author: T. Isobe (tisobe@cfa.harvard.edu)			#
-#	last update: Jun 22, 2005					#
+#	last update: Aug 10, 2005					#
 #########################################################################
 
 #########################################
@@ -22,8 +22,6 @@ $house_keeping = $dir_list[1];
 $exc_dir       = $dir_list[2];
 
 $bin_dir       = $dir_list[3];
-
-$ftools        = $dir_list[4];
 #
 #########################################
 

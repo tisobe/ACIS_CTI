@@ -8,7 +8,7 @@
 #	YOU MUST CHANGE MTA_REPORT_DIR TO THE CURRENT DIRECTORY			#
 #										#
 #	author: T. Isobe (tisobe@cfa.harvard.edu)				#
-#	last update: Jun 24, 2005						#
+#	last update: Aug 10, 2005						#
 #			modfied to fit a new directory system			#
 #										#
 #################################################################################
@@ -26,8 +26,6 @@ $house_keeping = $dir_list[1];
 $exc_dir       = $dir_list[2];
 
 $bin_dir       = $dir_list[3];
-
-$ftools        = $dir_list[4];
 #
 #########################################
 
@@ -76,7 +74,9 @@ foreach $line (@data_list){
 	@btemp = split(/acisf/,$file);
 	@ctemp = split(/_/, $btemp[1]);
 	$msid = $ctemp[0];
-	system("$ftools/fdump $file $exc_dir/Working_dir/zdump - 1 clobber=yes");
+
+	system("dmlist infile=$file opt=head outfile=$exc_dir/Working_dir/zdump");
+
 	open(FH, "$exc_dir/Working_dir/zdump");
 	$tstart = 'INDEF';
 	$tstop  = 'INDEF';
@@ -84,10 +84,10 @@ foreach $line (@data_list){
 	while(<FH>){
 		chomp $_;
 		if($_ =~ /DATE-OBS/i){
-			@atemp = split(/\'/,$_);
-			@btemp = split(/T/, $atemp[1]);
+			@atemp = split(/\s+/,$_);
+			@btemp = split(/T/, $atemp[2]);
 			@ctemp = split(/-/, $btemp[0]);
-			$tstart = $atemp[1];
+			$tstart = $atemp[2];
 			$tstart =~ s/\s+//g;
 			$syear = $ctemp[0];
 			$smon  = $ctemp[1];
@@ -108,10 +108,10 @@ foreach $line (@data_list){
 			conv_time_1998();
 			$st1998 = $t1998;
 		}elsif($_ =~ /DATE-END/i){
-			@atemp = split(/\'/,$_);
-			@btemp = split(/T/, $atemp[1]);
+			@atemp = split(/\s+/,$_);
+			@btemp = split(/T/, $atemp[2]);
 			@ctemp = split(/-/, $btemp[0]);
-			$tstop = $atemp[1];
+			$tstop = $atemp[2];
 			$tstop =~ s/\s+//g;
 			$eyear = $ctemp[0];
 			$emon  = $ctemp[1];

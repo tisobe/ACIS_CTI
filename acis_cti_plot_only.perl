@@ -6,7 +6,7 @@ use PGPLOT;
 # plot_only.perl: plot time vs cti evolution 				#
 #									#
 #	author: T. Isobe (tisobe@cfa.harvard.edu)			#
-#	last update: Jun 10, 2004					#
+#	last update: Aug 10, 2004					#
 #			modified to fit a ndw directry system		#
 #			removed several un needed parts			#
 #									#
@@ -25,8 +25,6 @@ $house_keeping = $dir_list[1];
 $exc_dir       = $dir_list[2];
 
 $bin_dir       = $dir_list[3];
-
-$ftools        = $dir_list[4];
 #
 #########################################
 
