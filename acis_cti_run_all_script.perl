@@ -19,7 +19,7 @@ $house_keeping = '/house_keeping/';
 
 $exc_dir       = '/data/mta/Script/ACIS/CTI/Exc/';
 
-$bin_dir       = '/data/mta4/MTA/bin/';
+$bin_dir       = '/data/mta/MTA/bin/';
 #
 #########################################
 
