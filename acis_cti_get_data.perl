@@ -27,7 +27,7 @@ $bin_dir       = $dir_list[3];
 #
 #########################################
 
-$bin_data = '/data/mta4/MTA/data/';
+$bin_data = '/data/mta/MTA/data/';
 
 $dare   =`cat $bin_data/.dare`;
 $hakama =`cat $bin_data/.hakama`;
