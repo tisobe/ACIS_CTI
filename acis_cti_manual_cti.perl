@@ -148,7 +148,7 @@ foreach $line (@data_list){
 	@ptemp = split(/acisf/, $file);
 	@qtemp = split(/_evt1/, $ptemp[1]);
 	$out_file = 'acisf'."$qtemp[0]".'_clipped_evt1.fits';
-	system("/home/ascds/DS.release/bin/dmcopy \"$in_line\" $exc_dir/Working_dir/$out_file option=all clobber=yes");
+	system("dmcopy infile=\"$in_line\" outfile=$exc_dir/Working_dir/$out_file option=all clobber=yes");
 	system("echo $exc_dir/Working_dir/$out_file > $exc_dir/Temp_comp_area/zcomp_dat.lis");
 
 #
@@ -190,39 +190,39 @@ foreach $line (@data_list){
 	system("rm $exc_dir/Working_dir/ztest_list");
 
 #### order of date could be out of order due to when the data was processed; sort out them.
-	foreach $elm ('al', 'mn', 'ti'){
-		for($iccd = 0; $iccd < 10; $iccd++){
-			$chk_file = "$cti_www".'/Results/'."$elm".'_ccd'."$iccd";
-
-			open(FH, "$chk_file");
-			@lines = ();
-			while(<IN>){
-				chomp $_;
-				push(@lines, $_);
-			}
-			close(IN);
-
-			$first = shift(@lines);
-			@new   = ($first);
-			OUTER:
-			foreach $ent (@lines){
-				foreach $comp (@new){
-					if($ent eq $comp){
-						next OUTER;
-					}
-				}
-				push(@new, $ent);
-			}	
-
-			@new_sorted = sort (@new);
-
-			open(OUT, ">$chk_file");
-			foreach $ent (@new_sorted){
-				print OUT "$ent\n";
-			}
-			close(OUT);
-		}
-	}
+#	foreach $elm ('al', 'mn', 'ti'){
+#		for($iccd = 0; $iccd < 10; $iccd++){
+#			$chk_file = "$cti_www".'/Results/'."$elm".'_ccd'."$iccd";
+#
+#			open(FH, "$chk_file");
+#			@lines = ();
+#			while(<IN>){
+#				chomp $_;
+#				push(@lines, $_);
+#			}
+#			close(IN);
+#
+#			$first = shift(@lines);
+#			@new   = ($first);
+#			OUTER:
+#			foreach $ent (@lines){
+#				foreach $comp (@new){
+#					if($ent eq $comp){
+#						next OUTER;
+#					}
+#				}
+#				push(@new, $ent);
+#			}	
+#
+#			@new_sorted = sort (@new);
+#
+#			open(OUT, ">$chk_file");
+#			foreach $ent (@new_sorted){
+#				print OUT "$ent\n";
+#			}
+#			close(OUT);
+#		}
+#	}
 }
 
 system("rm $exc_dir/Working_dir/*fits");
