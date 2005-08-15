@@ -190,39 +190,39 @@ foreach $line (@data_list){
 	system("rm $exc_dir/Working_dir/ztest_list");
 
 #### order of date could be out of order due to when the data was processed; sort out them.
-#	foreach $elm ('al', 'mn', 'ti'){
-#		for($iccd = 0; $iccd < 10; $iccd++){
-#			$chk_file = "$cti_www".'/Results/'."$elm".'_ccd'."$iccd";
-#
-#			open(FH, "$chk_file");
-#			@lines = ();
-#			while(<IN>){
-#				chomp $_;
-#				push(@lines, $_);
-#			}
-#			close(IN);
-#
-#			$first = shift(@lines);
-#			@new   = ($first);
-#			OUTER:
-#			foreach $ent (@lines){
-#				foreach $comp (@new){
-#					if($ent eq $comp){
-#						next OUTER;
-#					}
-#				}
-#				push(@new, $ent);
-#			}	
-#
-#			@new_sorted = sort (@new);
-#
-#			open(OUT, ">$chk_file");
-#			foreach $ent (@new_sorted){
-#				print OUT "$ent\n";
-#			}
-#			close(OUT);
-#		}
-#	}
+	foreach $elm ('al', 'mn', 'ti'){
+		for($iccd = 0; $iccd < 10; $iccd++){
+			$chk_file = "$cti_www".'/Results/'."$elm".'_ccd'."$iccd";
+
+			open(IN, "$chk_file");
+			@lines = ();
+			while(<IN>){
+				chomp $_;
+				push(@lines, $_);
+			}
+			close(IN);
+
+			$first = shift(@lines);
+			@new   = ($first);
+			OUTER:
+			foreach $ent (@lines){
+				foreach $comp (@new){
+					if($ent eq $comp){
+						next OUTER;
+					}
+				}
+				push(@new, $ent);
+			}	
+
+			@new_sorted = sort (@new);
+
+			open(OUT, ">$chk_file");
+			foreach $ent (@new_sorted){
+				print OUT "$ent\n";
+			}
+			close(OUT);
+		}
+	}
 }
 
 system("rm $exc_dir/Working_dir/*fits");

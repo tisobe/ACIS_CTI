@@ -147,7 +147,7 @@ if($in_count > 0) {
         	OUTER:
         	while(<IN>){
                 	chomp $_;
-                	@atemp = split(/\'/, $_);
+                	@atemp = split(/\s+/, $_);
                 	if($_ =~ /DATE-OBS/){
                         	$date_obs = $atemp[2];
                         	last OUTER;
@@ -156,7 +156,7 @@ if($in_count > 0) {
 		close(IN);
         	system("rm  $exc_dir/Working_dir/outfile");
 
-		$infile = "$fits_file".['cols ccd_id,drop_amp]';
+		$infile = "$fits_file".'[cols ccd_id,drop_amp]';
 		system("dmlist infile=\"$infile\" opt=data outfile=$exc_dir/Working_dir/ztemp");
 
 		@data  = ();
@@ -269,6 +269,8 @@ if($in_count > 0) {
 		print OUT "$ent\n";
 	}
 	close(OUT);
+	system("sort $cti_www/$house_keeping/amp_avg_list > ./Working_dir/atemp");
+	system("mv  ./Working_dir/atemp $cti_www/$house_keeping/amp_avg_list");
 }
 
 ######################################################
