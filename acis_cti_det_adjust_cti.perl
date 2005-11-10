@@ -11,7 +11,7 @@
 #									#
 #                                                                       #
 #       auther: T. Isobe (tisobe@cfa.harvard.edu)                       #
-#       Last Update: Aug 10, 2005                                       #
+#       Last Update: Nov 10, 2005                                       #
 #		modified to fit a new directry system			#
 #									#
 #########################################################################
@@ -61,6 +61,15 @@ foreach $element ('al', 'mn', 'ti'){
 			if($btemp[0] >= 2003 && $atemp[7] < 2000){
 				next OUTER;
 			}
+#
+#--- we need to drop data between 10/8/2005 - 10/16/2005 from temperature
+#--- related databases; the focal temp taken during this period is not reliable.
+#
+			@ctemp = split(/T/, $btemp[2]);
+			if($btemp[0] == 2005 && $btemp[1] == 10 && $ctemp[0] >= 8 && $ctemp[0] <= 16){
+				next OUTER;
+			}
+
 			open(OUT, ">>$out_dir3");
 			print OUT "$ent_line\n";
 			close(OUT);
