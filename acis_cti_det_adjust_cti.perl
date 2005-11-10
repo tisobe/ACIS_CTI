@@ -65,10 +65,16 @@ foreach $element ('al', 'mn', 'ti'){
 #--- we need to drop data between 10/8/2005 - 10/16/2005 from temperature
 #--- related databases; the focal temp taken during this period is not reliable.
 #
-			@ctemp = split(/T/, $btemp[2]);
-			if($btemp[0] == 2005 && $btemp[1] == 10 && $ctemp[0] >= 8 && $ctemp[0] <= 16){
-				next OUTER;
-			}
+                        @ctemp = split(/T/, $btemp[2]);
+                        if($btemp[0] == 2005){
+                                if($btemp[1] == 9 || $btemp[1] == 10){
+                                        if($btemp[1] == 9 && $ctemp[0] >= 16){
+                                                next OUTER;
+                                        }elsif($btemp[1] == 10 && $ctemp[0] <= 16){
+                                                next OUTER;
+                                        }
+                                }
+                        }
 
 			open(OUT, ">>$out_dir3");
 			print OUT "$ent_line\n";
