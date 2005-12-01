@@ -6,7 +6,7 @@
 #			        dependency of CTI, and modify the data		#
 #										#
 #	Author: T. Isobe (tisobe@cfa.harvard.edu)				#
-#	Last update: Nov 10, 2005						#
+#	Last update: Dec 01, 2005						#
 #		modified to fit a new directory system				#
 #										#
 #################################################################################
@@ -88,16 +88,17 @@ foreach $elem (al, mn, ti){
 					next OUTER;
 				}
 #
-#--- we need to drop data between 9/16/2005 - 10/16/2005 from temperature
-#--- related databases; the focal temp taken during this period is not reliable.
+#--- we need to adjust focal plane temperature between 9/16/2005 - 10/16/2005
+#--- a reported temperature is about 1.3 warmer than a real focal temperature 
+#--- (from 12/105 email from C. Grant)
 #
 	                        @ctemp = split(/T/, $btemp[2]);
                         	if($btemp[0] == 2005){
                                 	if($btemp[1] == 9 || $btemp[1] == 10){
                                         	if($btemp[1] == 9 && $ctemp[0] >= 16){
-                                                	next OUTER;
+                                                	$atemp[8] -= 1.3;
                                         	}elsif($btemp[1] == 10 && $ctemp[0] <= 16){
-                                                	next OUTER;
+                                                	$atemp[8] -= 1.3;
                                         	}
                                 	}
                         	}
