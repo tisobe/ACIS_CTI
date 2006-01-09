@@ -86,9 +86,9 @@ foreach $elem (al, mn, ti){
                         if($btemp[0] == 2005){
                                 if($btemp[1] == 9 || $btemp[1] == 10){
                                         if($btemp[1] == 9 && $ctemp[0] >= 16){
-                                                $atemp8] -= 1.3;
+                                                $atemp[8] -= 1.3;
                                         }elsif($btemp[1] == 10 && $ctemp[0] <= 16){
-                                                $atemp8] -= 1.3;
+                                                $atemp[8] -= 1.3;
                                         }
                                 }
                         }
