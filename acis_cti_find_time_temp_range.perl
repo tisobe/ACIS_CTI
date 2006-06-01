@@ -60,7 +60,7 @@ sub find_temp_range{
 #########################################################################
 
 	
-	system("ls /data/mta/Script/Focal/Short_term > $exc_dir/Working_dir/ztemp");	# get focal temp
+	system("ls /data/mta/Script/ACIS/Focal/Short_term > $exc_dir/Working_dir/ztemp");	# get focal temp
 	@temp_list = ();
 	open(FH, "$exc_dir/Working_dir/ztemp");
 	while(<FH>){
@@ -208,7 +208,7 @@ sub find_temp_range{
 #
 #### put all time-focal temp info into one file
 #
-			system("cat /data/mta/Script/Focal/Short_term/$ent >> $exc_dir/Working_dir/ztemp");
+			system("cat /data/mta/Script/ACIS/Focal/Short_term/$ent >> $exc_dir/Working_dir/ztemp");
 		}
 	
 		$b_ind = 0;
