@@ -8,8 +8,9 @@
 #	YOU MUST CHANGE MTA_REPORT_DIR TO THE CURRENT DIRECTORY			#
 #										#
 #	author: T. Isobe (tisobe@cfa.harvard.edu)				#
-#	last update: Aug 10, 2005						#
-#			modfied to fit a new directory system			#
+#	last update: Nov 21, 2006						#
+#			modfied to fit a new directory system (08/10/05)	#
+#			modifed to accomodate a new flt_run_pipe		#
 #										#
 #################################################################################
 
