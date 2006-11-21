@@ -305,8 +305,18 @@ sub read_ccd {
         $al_node = 0;
         $ti_node = 0;
         $mn_node = 0;
+	$elem    = '';
         OUTER:
         while(<IFH>) {
+		chomp $_;
+		if($_ =~ /Al Ka/){
+			$elem = 'al';
+		}elsif($_ =~ /Mn Ka/){
+			$elem = 'mn';
+		}elsif($_ =~ /Ti Ka/){
+			$elem = 'ti';
+		}
+
                 if($idcheck == 0) {
                         @atemp = split(/\<TD ALIGN=\"CENTER\"\>\<B\>/,$_);
                         @btemp = split(/:/, $atemp[1]);
@@ -343,7 +353,7 @@ sub read_ccd {
                                 $end_date = $ctemp[0];
                                 $decheck = 1;
                         }
-                } elsif($si_read == 1 && $al_node < 4) {        # find al Ka info
+                } elsif($elem eq  'al' && $si_read == 1 && $al_node < 4) {        # find al Ka info
 #                       @atemp = split(/\<TD\>\<FONT SIZE=-1.7\>/, $_);
                         @atemp = split(/\<TD\>\<FONT SIZE=-1.7 ALIGN=RIGHT WIDTH=125\>/, $_);
                         @btemp = split(/</,$atemp[1]);
@@ -359,7 +369,7 @@ sub read_ccd {
                         if($al_node == 4) {
                                 $si_read = 0;
                         }
-                } elsif($si_read == 1 && $ti_node < 4) {        # find ti Ka info
+                } elsif($elem eq 'ti' && $si_read == 1 && $ti_node < 4) {        # find ti Ka info
 #                       @atemp = split(/\<TD\>\<FONT SIZE=-1.7\>/, $_);
                         @atemp = split(/\<TD\>\<FONT SIZE=-1.7 ALIGN=RIGHT WIDTH=125\>/, $_);
                         @btemp = split(/</,$atemp[1]);
@@ -375,7 +385,7 @@ sub read_ccd {
                         if($ti_node == 4) {
                                 $si_read = 0;
                         }
-                } elsif($si_read == 1 && $mn_node < 4) {        # find mn Ka info
+                } elsif($elem eq 'mn' && $si_read == 1 && $mn_node < 4) {        # find mn Ka info
 #                       @atemp = split(/\<TD\>\<FONT SIZE=-1.7\>/, $_);
                         @atemp = split(/\<TD\>\<FONT SIZE=-1.7 ALIGN=RIGHT WIDTH=125\>/, $_);
                         @btemp = split(/</,$atemp[1]);
@@ -390,7 +400,6 @@ sub read_ccd {
                         $mn_node++;
                         if($mn_node == 4) {
                                 $si_read = 0;
-                                last OUTER;
                         }
                 } else {
                         @atemp = split(/\t/, $_);
