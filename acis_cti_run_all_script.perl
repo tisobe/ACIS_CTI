@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/opt/local/bin/perl
 
 #################################################################################
 #										#
@@ -6,7 +6,7 @@
 #										#
 #	author: t. isobe (tiosbe@cfa.harvard.edu)				#
 #										#
-#	last update: Aug 10, 2005						#
+#	last update: Jun 04, 2009						#
 #										#
 #################################################################################
 
@@ -46,85 +46,85 @@ if($chk !~ /Working_dir/){
 #
 #--- a list of cti obsrvations are obtained from Jim's cti computation
 #
-system("perl $bin_dir/acis_cti_find_new_entry.perl");
+system("/opt/local/bin/perl $bin_dir/acis_cti_find_new_entry.perl");
 
-system("perl $bin_dir/acis_cti_get_data.perl ");
+system("/opt/local/bin/perl $bin_dir/acis_cti_get_data.perl ");
 #
 #--- check a focal plane temp so that we can discreminate cti depending on temp
 #
-system("perl $bin_dir/acis_cti_find_time_temp_range.perl");
+system("/opt/local/bin/perl $bin_dir/acis_cti_find_time_temp_range.perl");
 #
 #--- recmpute cti according to temperature difference
 #
-system("perl $bin_dir/acis_cti_manual_cti.perl ");
+system("/opt/local/bin/perl $bin_dir/acis_cti_manual_cti.perl ");
 #
 #--- compute detrending factor
 #
-system("perl $bin_dir/acis_cti_detrend_factor.perl");
+system("/opt/local/bin/perl $bin_dir/acis_cti_detrend_factor.perl");
 #
 #--- create several data sets (e.g. temperature and/or time)
 #
-system("perl $bin_dir/acis_cti_adjust_cti.perl ");
+system("/opt/local/bin/perl $bin_dir/acis_cti_adjust_cti.perl ");
 #
 #--- compute adjustment factor for temeprature depended cti
 #
-system("perl $bin_dir/acis_cti_comp_adjusted_cti.perl ");
+system("/opt/local/bin/perl $bin_dir/acis_cti_comp_adjusted_cti.perl ");
 
 #
 #--- cti plottings start here
 #
-system("perl $bin_dir/acis_cti_find_outlayer.perl 	Data119");
-system("perl $bin_dir/acis_cti_plot_only.perl 		Data119");
+system("/opt/local/bin/perl $bin_dir/acis_cti_find_outlayer.perl 	Data119");
+system("/opt/local/bin/perl $bin_dir/acis_cti_plot_only.perl 		Data119");
 
-system("perl $bin_dir/acis_cti_find_outlayer.perl 	Data2000");
-system("perl $bin_dir/acis_cti_plot_only.perl 		Data2000");
+system("/opt/local/bin/perl $bin_dir/acis_cti_find_outlayer.perl 	Data2000");
+system("/opt/local/bin/perl $bin_dir/acis_cti_plot_only.perl 		Data2000");
 
-system("perl $bin_dir/acis_cti_find_outlayer.perl 	Data7000");
-system("perl $bin_dir/acis_cti_plot_only.perl 		Data7000");
+system("/opt/local/bin/perl $bin_dir/acis_cti_find_outlayer.perl 	Data7000");
+system("/opt/local/bin/perl $bin_dir/acis_cti_plot_only.perl 		Data7000");
 
-system("perl $bin_dir/acis_cti_find_outlayer.perl 	Data_adjust");
-system("perl $bin_dir/acis_cti_plot_only.perl 		Data_adjust");
+system("/opt/local/bin/perl $bin_dir/acis_cti_find_outlayer.perl 	Data_adjust");
+system("/opt/local/bin/perl $bin_dir/acis_cti_plot_only.perl 		Data_adjust");
 
-system("perl $bin_dir/acis_cti_find_outlayer.perl 	Data_cat_adjust");
-system("perl $bin_dir/acis_cti_plot_only.perl 		Data_cat_adjust");
+system("/opt/local/bin/perl $bin_dir/acis_cti_find_outlayer.perl 	Data_cat_adjust");
+system("/opt/local/bin/perl $bin_dir/acis_cti_plot_only.perl 		Data_cat_adjust");
 
 
 #
 #--- create detrended data set
 #
 
-system("perl $bin_dir/acis_cti_make_detrend_data.perl");
+system("/opt/local/bin/perl $bin_dir/acis_cti_make_detrend_data.perl");
 
-system("perl $bin_dir/acis_cti_det_adjust_cti.perl ");
+system("/opt/local/bin/perl $bin_dir/acis_cti_det_adjust_cti.perl ");
 
-system("perl $bin_dir/acis_cti_det_comp_adjusted_cti.perl ");
+system("/opt/local/bin/perl $bin_dir/acis_cti_det_comp_adjusted_cti.perl ");
 
 #
 #--- detrended cti plots start here
 #
 
-system("perl $bin_dir/acis_cti_find_outlayer.perl 	Det_Data119");
-system("perl $bin_dir/acis_cti_det_plot_only.perl 	Det_Data119");
+system("/opt/local/bin/perl $bin_dir/acis_cti_find_outlayer.perl 	Det_Data119");
+system("/opt/local/bin/perl $bin_dir/acis_cti_det_plot_only.perl 	Det_Data119");
 
-system("perl $bin_dir/acis_cti_find_outlayer.perl 	Det_Data2000");
-system("perl $bin_dir/acis_cti_det_plot_only.perl 	Det_Data2000");
+system("/opt/local/bin/perl $bin_dir/acis_cti_find_outlayer.perl 	Det_Data2000");
+system("/opt/local/bin/perl $bin_dir/acis_cti_det_plot_only.perl 	Det_Data2000");
 
-system("perl $bin_dir/acis_cti_find_outlayer.perl 	Det_Data7000");
-system("perl $bin_dir/acis_cti_det_plot_only.perl 	Det_Data7000");
+system("/opt/local/bin/perl $bin_dir/acis_cti_find_outlayer.perl 	Det_Data7000");
+system("/opt/local/bin/perl $bin_dir/acis_cti_det_plot_only.perl 	Det_Data7000");
 
-system("perl $bin_dir/acis_cti_find_outlayer.perl 	Det_Data_adjust");
-system("perl $bin_dir/acis_cti_det_plot_only.perl 	Det_Data_adjust");
+system("/opt/local/bin/perl $bin_dir/acis_cti_find_outlayer.perl 	Det_Data_adjust");
+system("/opt/local/bin/perl $bin_dir/acis_cti_det_plot_only.perl 	Det_Data_adjust");
 
-system("perl $bin_dir/acis_cti_find_outlayer.perl 	Det_Data_cat_adjust");
-system("perl $bin_dir/acis_cti_det_plot_only.perl 	Det_Data_cat_adjust");
+system("/opt/local/bin/perl $bin_dir/acis_cti_find_outlayer.perl 	Det_Data_cat_adjust");
+system("/opt/local/bin/perl $bin_dir/acis_cti_det_plot_only.perl 	Det_Data_cat_adjust");
 
 #
 #--- slightly different plottings
 #
 
-system("perl $bin_dir/acis_cti_new_plot_only.perl");
-system("perl $bin_dir/acis_cti_new_det_plot_only.perl");
-system("perl $bin_dir/acis_cti_new_det_plot_only_part.perl");
+system("/opt/local/bin/perl $bin_dir/acis_cti_new_plot_only.perl");
+system("/opt/local/bin/perl $bin_dir/acis_cti_new_det_plot_only.perl");
+system("/opt/local/bin/perl $bin_dir/acis_cti_new_det_plot_only_part.perl");
 
 #
 #----  update the html page
