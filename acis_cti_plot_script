@@ -11,3 +11,7 @@ set path = (/home/ascds/DS.release/ots/bin/ $path)
 setenv MTA_REPORT_DIR  /data/mta/Script/ACIS/CTI/Exc/Temp_comp_area
 
 /opt/local/bin/perl /data/mta/MTA/bin/acis_cti_run_all_script.perl
+
+chgrp mtagroup /data/mta/Script/ACIS/CTI/Data/* /data/mta/Script/ACIS/CTI/Data/*/* 
+chgrp mtagroup /data/mta/Script/ACIS/CTI/house_keeping/*
+chgrp mtagroup /data/mta_www/mta_temp/mta_cti/* /data/mta_www/mta_temp/mta_cti/*/*
