@@ -11,7 +11,7 @@
 #									#
 #                                                                       #
 #       auther: T. Isobe (tisobe@cfa.harvard.edu)                       #
-#       Last Update: Nov 10, 2005                                       #
+#       Last Update: Mar 10, 2011                                       #
 #		modified to fit a new directry system			#
 #									#
 #########################################################################
@@ -19,16 +19,25 @@
 #########################################
 #--- set directories
 #
-$in_list  = `cat ./dir_list`;
-@dir_list = split(/\s+/, $in_list);
+open(FH, "/data/mta/Script/ACIS/CTI/house_keeping/dir_list");
+@dir_list = ();
+OUTER:
+while(<FH>){
+        if($_ =~ /#/){
+                next OUTER;
+        }
+        chomp $_;
+        push(@dir_list, $_);
+}
+close(FH);
 
-$cti_www       = $dir_list[0];
+$bin_dir       = $dir_list[0];
+$bin_data      = $dir_list[1];
+$cti_www       = $dir_list[2];
+$data_dir      = $dir_list[3];
+$house_keeping = $dir_list[4];
+$exc_dir       = $dir_list[5];
 
-$house_keeping = $dir_list[1];
-
-$exc_dir       = $dir_list[2];
-
-$bin_dir       = $dir_list[3];
 #
 #########################################
 
@@ -40,11 +49,11 @@ foreach $element ('al', 'mn', 'ti'){
 			$factor = 0.045;
 		}
 
-		$read_dir  = "$cti_www".'Det_Results/'."$element".'_ccd'."$iccd";
-		$out_dir   = "$cti_www".'Det_Data119/'."$element".'_ccd'."$iccd";
-		$out_dir2  = "$cti_www".'Det_Data_cat_adjust/'."$element".'_ccd'."$iccd";
-		$out_dir3  = "$cti_www".'Det_Data2000/'."$element".'_ccd'."$iccd";
-		$out_dir4  = "$cti_www".'Det_Data7000/'."$element".'_ccd'."$iccd";
+		$read_dir  = "$data_dir".'Det_Results/'."$element".'_ccd'."$iccd";
+		$out_dir   = "$data_dir".'Det_Data119/'."$element".'_ccd'."$iccd";
+		$out_dir2  = "$data_dir".'Det_Data_cat_adjust/'."$element".'_ccd'."$iccd";
+		$out_dir3  = "$data_dir".'Det_Data2000/'."$element".'_ccd'."$iccd";
+		$out_dir4  = "$data_dir".'Det_Data7000/'."$element".'_ccd'."$iccd";
 
 		system("rm $out_dir $out_dir2 $out_dir3 $out_dir4");
 		open(FH, "$read_dir");

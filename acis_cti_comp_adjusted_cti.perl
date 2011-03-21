@@ -6,7 +6,7 @@
 #			        dependency of CTI, and modify the data		#
 #										#
 #	Author: T. Isobe (tisobe@cfa.harvard.edu)				#
-#	Last update: Dec 01, 2005						#
+#	Last update: Mar 10, 2011						#
 #		modified to fit a new directory system				#
 #										#
 #################################################################################
@@ -14,28 +14,36 @@
 #########################################
 #--- set directories
 #
-$in_list  = `cat ./dir_list`;
-@dir_list = split(/\s+/, $in_list);
+open(FH, "/data/mta/Script/ACIS/CTI/house_keeping/dir_list");
+@dir_list = ();
+OUTER:
+while(<FH>){
+        if($_ =~ /#/){
+                next OUTER;
+        }
+        chomp $_;
+        push(@dir_list, $_);
+}
+close(FH);
 
-$cti_www       = $dir_list[0];
-
-$house_keeping = $dir_list[1];
-
-$exc_dir       = $dir_list[2];
-
-$bin_dir       = $dir_list[3];
+$bin_dir       = $dir_list[0];
+$bin_data      = $dir_list[1];
+$cti_www       = $dir_list[2];
+$data_dir      = $dir_list[3];
+$house_keeping = $dir_list[4];
+$exc_dir       = $dir_list[5];
 #
 #########################################
 
-$dir = "$cti_www/Results";
+$dir = "$data_dir/Results";
 
 foreach $elem (al, mn, ti){
 	$elm_factor = "$elem".'_factor';
-	open(ZOUT, ">$cti_www/$elm_factor");
+	open(ZOUT, ">$data_dir/$elm_factor");
 	for($ccd = 0; $ccd < 10; $ccd++){
 		$file     = "$elem".'_ccd'."$ccd";
 		$in_file  = "$dir".'/'."$file";	
-		$out_file = "$cti_www".'/Data_adjust/'."$file";
+		$out_file = "$data_dir".'/Data_adjust/'."$file";
 
 		@time  = ();
 		@quad0 = ();
@@ -278,6 +286,10 @@ sub conv_date {
                 $acc_date += 3;
         }elsif($year > 2012) {
                 $acc_date += 4;
+        }elsif($year > 2016) {
+                $acc_date += 5;
+        }elsif($year > 2020) {
+                $acc_date += 6;
         }
 
         $acc_date += $day - 1;

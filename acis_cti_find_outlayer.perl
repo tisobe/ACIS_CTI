@@ -5,7 +5,7 @@
 #	find_outlayer.perl: find outlayer data points from data sets and remove them	#
 #											#
 #	author: T. Isobe (tisobe@cfa.harvard.edu)					#
-#	Last update: Aug 10, 2005							#
+#	Last update: Mar 10, 2011							#
 #		modified to fit a new directory system					#
 #											#	
 #########################################################################################
@@ -13,16 +13,25 @@
 #########################################
 #--- set directories
 #
-$in_list  = `cat ./dir_list`;
-@dir_list = split(/\s+/, $in_list);
+open(FH, "/data/mta/Script/ACIS/CTI/house_keeping/dir_list");
+@dir_list = ();
+OUTER:
+while(<FH>){
+        if($_ =~ /#/){
+                next OUTER;
+        }
+        chomp $_;
+        push(@dir_list, $_);
+}
+close(FH);
 
-$cti_www       = $dir_list[0];
+$bin_dir       = $dir_list[0];
+$bin_data      = $dir_list[1];
+$cti_www       = $dir_list[2];
+$data_dir      = $dir_list[3];
+$house_keeping = $dir_list[4];
+$exc_dir       = $dir_list[5];
 
-$house_keeping = $dir_list[1];
-
-$exc_dir       = $dir_list[2];
-
-$bin_dir       = $dir_list[3];
 #
 #########################################
 
@@ -35,7 +44,7 @@ $factor2 = 4.0;			###### all other ccds
 $dir = $ARGV[0];
 chomp $dir;
 
-$dir = "$cti_www/"."$dir";
+$dir = "$data_dir/"."$dir";
 
 $det_dir = 0;			##### check whether this detrend dataset or not
 @ccd_list = (0,1,2,3,4,5,6,7,8,9);
@@ -330,6 +339,10 @@ sub conv_date {
                 $acc_date += 3;
         }elsif($year > 2012) {
                 $acc_date += 4;
+        }elsif($year > 2016) {
+                $acc_date += 5;
+        }elsif($year > 2012) {
+                $acc_date += 6;
         }
 
         $acc_date += $day - 1;

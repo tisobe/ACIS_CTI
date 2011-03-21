@@ -8,7 +8,7 @@
 #	YOU MUST CHANGE MTA_REPORT_DIR TO THE CURRENT DIRECTORY			#
 #										#
 #	author: T. Isobe (tisobe@cfa.harvard.edu)				#
-#	last update: Nov 21, 2006						#
+#	last update: Mar 09, 2011						#
 #			modfied to fit a new directory system (08/10/05)	#
 #			modifed to accomodate a new flt_run_pipe		#
 #										#
@@ -17,16 +17,25 @@
 #########################################
 #--- set directories
 #
-$in_list  = `cat ./dir_list`;
-@dir_list = split(/\s+/, $in_list);
+open(FH, "/data/mta/Script/ACIS/CTI/house_keeping/dir_list");
+@dir_list = ();
+OUTER:
+while(<FH>){
+        if($_ =~ /#/){
+                next OUTER;
+        }
+        chomp $_;
+        push(@dir_list, $_);
+}
+close(FH);
 
-$cti_www       = $dir_list[0];
+$bin_dir       = $dir_list[0];
+$bin_data      = $dir_list[1];
+$cti_www       = $dir_list[2];
+$data_dir      = $dir_list[3];
+$house_keeping = $dir_list[4];
+$exc_dir       = $dir_list[5];
 
-$house_keeping = $dir_list[1];
-
-$exc_dir       = $dir_list[2];
-
-$bin_dir       = $dir_list[3];
 #
 #########################################
 
@@ -45,7 +54,7 @@ while(<FH>){
 }
 close(FH);
 
-system("mv $exc_dir/Working_dir/temp_file $cti_www/$house_keeping/temp_file~");
+system("mv $exc_dir/Working_dir/temp_file $house_keeping/temp_file~");
 
 OUTER:
 foreach $line (@data_list){
@@ -172,13 +181,13 @@ foreach $line (@data_list){
 		$ccd = pop @gtemp;
 		read_ccd();
 		$ccd_out = "$ccd";
-		open(OUT, ">>$cti_www/Results/al_$ccd_out");
+		open(OUT, ">>$data_dir/Results/al_$ccd_out");
 		print OUT "$tstart\t${al_ratio.0}\t${al_ratio.1}\t${al_ratio.2}\t${al_ratio.3}\t$msid\t$tstop\t$total_int_time\t$temperature\n";
 		close(OUT);
-		open(OUT, ">>$cti_www/Results/ti_$ccd_out");
+		open(OUT, ">>$data_dir/Results/ti_$ccd_out");
 		print OUT "$tstart\t${ti_ratio.0}\t${ti_ratio.1}\t${ti_ratio.2}\t${ti_ratio.3}\t$msid\t$tstop\t$total_int_time\t$temperature\n";
 		close(OUT);
-		open(OUT, ">>$cti_www/Results/mn_$ccd_out");
+		open(OUT, ">>$data_dir/Results/mn_$ccd_out");
 		print OUT "$tstart\t${mn_ratio.0}\t${mn_ratio.1}\t${mn_ratio.2}\t${mn_ratio.3}\t$msid\t$tstop\t$total_int_time\t$temperature\n";
 		close(OUT);
 	}
@@ -193,7 +202,7 @@ foreach $line (@data_list){
 #### order of date could be out of order due to when the data was processed; sort out them.
 	foreach $elm ('al', 'mn', 'ti'){
 		for($iccd = 0; $iccd < 10; $iccd++){
-			$chk_file = "$cti_www".'/Results/'."$elm".'_ccd'."$iccd";
+			$chk_file = "$data_dir".'/Results/'."$elm".'_ccd'."$iccd";
 
 			open(IN, "$chk_file");
 			@lines = ();

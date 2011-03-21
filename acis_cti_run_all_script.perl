@@ -6,33 +6,35 @@
 #										#
 #	author: t. isobe (tiosbe@cfa.harvard.edu)				#
 #										#
-#	last update: Jun 04, 2009						#
+#	last update: Mar 09, 2011						#
 #										#
 #################################################################################
 
 #########################################
 #--- set directories
 #
-$cti_www       = '/data/mta/www/mta_cti/';
 
-$house_keeping = '/house_keeping/';
+open(FH, "/data/mta/Script/ACIS/CTI/house_keeping/dir_list");
+@dir_list = ();
+OUTER:
+while(<FH>){
+        if($_ =~ /#/){
+                next OUTER;
+        }
+        chomp $_;
+        push(@dir_list, $_);
+}
+close(FH);
 
-$exc_dir       = '/data/mta/Script/ACIS/CTI/Exc/';
+$bin_dir       = $dir_list[0];
+$bin_data      = $dir_list[1];
+$cti_www       = $dir_list[2];
+$data_dir      = $dir_list[3];
+$house_keeping = $dir_list[4];
+$exc_dir       = $dir_list[5];
 
-$bin_dir       = '/data/mta/MTA/bin/';
-#
 #########################################
 
-#
-#--- create a directoy infromation file to be read by all perl script
-#
-
-open(OUT, '>./dir_list');
-print OUT "$cti_www\n";		#a directory where all output go
-print OUT "$house_keeping\n";	#a directory where records are kept
-print OUT "$exc_dir\n";		#a directory where computations are done	
-print OUT "$bin_dir\n";		#a directory where scripts are kept
-close(OUT);
 
 #
 #--- check whether Working dir exist or not, and if not, create one.
@@ -46,33 +48,44 @@ if($chk !~ /Working_dir/){
 #
 #--- a list of cti obsrvations are obtained from Jim's cti computation
 #
-system("/opt/local/bin/perl $bin_dir/acis_cti_find_new_entry.perl");
 
+system("/opt/local/bin/perl $bin_dir/acis_cti_find_new_entry.perl");
 system("/opt/local/bin/perl $bin_dir/acis_cti_get_data.perl ");
+
 #
 #--- check a focal plane temp so that we can discreminate cti depending on temp
 #
+
 system("/opt/local/bin/perl $bin_dir/acis_cti_find_time_temp_range.perl");
+
 #
 #--- recmpute cti according to temperature difference
 #
+
 system("/opt/local/bin/perl $bin_dir/acis_cti_manual_cti.perl ");
+
 #
 #--- compute detrending factor
 #
+
 system("/opt/local/bin/perl $bin_dir/acis_cti_detrend_factor.perl");
+
 #
 #--- create several data sets (e.g. temperature and/or time)
 #
+
 system("/opt/local/bin/perl $bin_dir/acis_cti_adjust_cti.perl ");
+
 #
 #--- compute adjustment factor for temeprature depended cti
 #
+
 system("/opt/local/bin/perl $bin_dir/acis_cti_comp_adjusted_cti.perl ");
 
 #
 #--- cti plottings start here
 #
+
 system("/opt/local/bin/perl $bin_dir/acis_cti_find_outlayer.perl 	Data119");
 system("/opt/local/bin/perl $bin_dir/acis_cti_plot_only.perl 		Data119");
 
@@ -141,11 +154,10 @@ open(OUT, ">$exc_dir/Working_dir/date_file");
 print OUT "\n$line\n";
 close(OUT);
 
-system("cat $cti_www/$house_keeping/cti_page.html $exc_dir/Working_dir/date_file > $cti_www/cti_page.html");
+system("cat $house_keeping/cti_page.html $exc_dir/Working_dir/date_file > $cti_www/cti_page.html");
 
 #
 #--- cleaning up
 #
 
-system("rm ./dir_list");
-system("rm -rf $exc_dir/Working_dir");
+system("rm -rf $exc_dir/*");

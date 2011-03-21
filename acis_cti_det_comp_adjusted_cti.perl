@@ -9,7 +9,7 @@
 #	SEE THE SCRIPT FOR DETAILED EXPLANATION					#
 #                                                                               #
 #       Author: T. Isobe (tisobe@cfa.harvard.edu)                               #
-#       Last update: Dec 01, 2005                                               #
+#       Last update: Mar 10, 2011                                               #
 #		modified to fit a new directry system				#
 #										#
 #################################################################################
@@ -17,24 +17,33 @@
 #########################################
 #--- set directories
 #
-$in_list  = `cat ./dir_list`;
-@dir_list = split(/\s+/, $in_list);
+open(FH, "/data/mta/Script/ACIS/CTI/house_keeping/dir_list");
+@dir_list = ();
+OUTER:
+while(<FH>){
+        if($_ =~ /#/){
+                next OUTER;
+        }
+        chomp $_;
+        push(@dir_list, $_);
+}
+close(FH);
 
-$cti_www       = $dir_list[0];
+$bin_dir       = $dir_list[0];
+$bin_data      = $dir_list[1];
+$cti_www       = $dir_list[2];
+$data_dir      = $dir_list[3];
+$house_keeping = $dir_list[4];
+$exc_dir       = $dir_list[5];
 
-$house_keeping = $dir_list[1];
-
-$exc_dir       = $dir_list[2];
-
-$bin_dir       = $dir_list[3];
 #
 #########################################
 
 foreach $elem (al, mn, ti){
 	foreach $ccd (0, 1, 2, 3, 4, 6, 8, 9){
 		$file     = "$elem".'_ccd'."$ccd";
-		$in_file  = "$cti_www".'/Det_Results/'."$file";	
-		$out_file = "$cti_www".'/Det_Data_adjust/'."$file";
+		$in_file  = "$data_dir".'/Det_Results/'."$file";	
+		$out_file = "$data_dir".'/Det_Data_adjust/'."$file";
 
 		@time  = ();
 		@quad0 = ();
@@ -247,6 +256,10 @@ sub conv_date {
                 $acc_date += 3;
         }elsif($year > 2012) {
                 $acc_date += 4;
+        }elsif($year > 2016) {
+                $acc_date += 5;
+        }elsif($year > 2020) {
+                $acc_date += 6;
         }
 
         $acc_date += $day - 1;

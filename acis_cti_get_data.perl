@@ -5,7 +5,7 @@
 #	get_data.perl: obtain data for unprocessed data from the previous run	#
 #										#
 #	author: t. isobe (tisobe@cfa.harvard.edu)				#
-#	last update: aug 10, 2005						#
+#	last update: Mar 09, 2011						#
 #			modified to fit into a new directory system		#
 #										#
 #################################################################################
@@ -14,27 +14,34 @@
 #########################################
 #--- set directories
 #
-$in_list  = `cat ./dir_list`;
-@dir_list = split(/\s+/, $in_list);
+open(FH, "/data/mta/Script/ACIS/CTI/house_keeping/dir_list");
+@dir_list = ();
+OUTER:
+while(<FH>){
+        if($_ =~ /#/){
+                next OUTER;
+        }
+        chomp $_;
+        push(@dir_list, $_);
+}
+close(FH);
 
-$cti_www       = $dir_list[0];
+$bin_dir       = $dir_list[0];
+$bin_data      = $dir_list[1];
+$cti_www       = $dir_list[2];
+$data_dir      = $dir_list[3];
+$house_keeping = $dir_list[4];
+$exc_dir       = $dir_list[5];
 
-$house_keeping = $dir_list[1];
-
-$exc_dir       = $dir_list[2];
-
-$bin_dir       = $dir_list[3];
 #
 #########################################
-
-$bin_data = '/data/mta/MTA/data/';
 
 $dare   =`cat $bin_data/.dare`;
 $hakama =`cat $bin_data/.hakama`;
 chomp $dare;
 chomp $hakama;
 
-system("rm $cti_www/$house_keeping/keep_entry");
+system("rm $house_keeping/keep_entry");
 open(FH, "$exc_dir/Working_dir/new_entry");
 while(<FH>){
 	chomp $_;
@@ -51,8 +58,8 @@ while(<FH>){
         print OUT "go\n";
         close(OUT);
 
-        `echo $hakama  |/home/ascds/DS.release/bin/arc4gl -U$dare -Sarcocc -i$exc_dir/Working_dir/input_line`; # here is the arc4gl
-        `gzip -d *gz`;
+        system("echo $hakama  |/home/ascds/DS.release/bin/arc4gl -U$dare -Sarcocc -i$exc_dir/Working_dir/input_line"); # here is the arc4gl
+        system("gzip -d *gz");
 	
 	$name = '*'."$obsid".'*fits';
 	system("ls $name > $exc_dir/Working_dir/zfits_test");
@@ -70,7 +77,7 @@ while(<FH>){
 	}
 	close(IN);
 	if($chk == 0){
-		open(OUT2, ">> $exc_dir/$house_keeping/keep_entry");
+		open(OUT2, ">> $house_keeping/keep_entry");
 		print OUT2 "$obsid\n";
 		close(OUT2);
 	}

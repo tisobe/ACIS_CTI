@@ -6,22 +6,31 @@ use PGPLOT;
 # acis_cti_new_plot_only.perl: plot time vs cti evolution 		#
 #									#
 #	author: T. Isobe (tisobe@cfa.harvard.edu)			#
-#	last update: Aug 10, 2005					#
+#	last update: Mar 10, 2011					#
 #########################################################################
 
 #########################################
 #--- set directories
 #
-$in_list  = `cat ./dir_list`;
-@dir_list = split(/\s+/, $in_list);
+open(FH, "/data/mta/Script/ACIS/CTI/house_keeping/dir_list");
+@dir_list = ();
+OUTER:
+while(<FH>){
+        if($_ =~ /#/){
+                next OUTER;
+        }
+        chomp $_;
+        push(@dir_list, $_);
+}
+close(FH);
 
-$cti_www       = $dir_list[0];
+$bin_dir       = $dir_list[0];
+$bin_data      = $dir_list[1];
+$cti_www       = $dir_list[2];
+$data_dir      = $dir_list[3];
+$house_keeping = $dir_list[4];
+$exc_dir       = $dir_list[5];
 
-$house_keeping = $dir_list[1];
-
-$exc_dir       = $dir_list[2];
-
-$bin_dir       = $dir_list[3];
 #
 #########################################
 
@@ -48,7 +57,7 @@ sub ccd_plot{
 		$range = "$elm"."_range";
 	}
 	
-	open(FH,"$cti_www/$house_keeping/Range_data/$range");
+	open(FH,"$house_keeping/Range_data/$range");
 	$cno = 0;
 	OUTER:
 	while(<FH>) {
@@ -67,7 +76,7 @@ sub ccd_plot{
 	for($i = 0; $i < 10; $i++) {			# al, ti, and mn
 		foreach $input_in ('Data119', 'Data2000', 'Data7000', 'Data_adjust', 'Data_cat_adjust'){
 
-			$input_dir = "$cti_www/"."$input_in";
+			$input_dir = "$data_dir/"."$input_in";
 
 			$count = 0;
 			@time_list = ();
@@ -187,7 +196,7 @@ sub ccd_plot{
 				ch_time_form();				# changing time format
 			}
 
-			if($input_dir eq "$cti_www/Data119"){
+			if($input_dir eq "$data_dir/Data119"){
 					@time_119  = @xbin;
 					@node0_119 = @node0;
 					@node1_119 = @node1;
@@ -200,7 +209,7 @@ sub ccd_plot{
 					$count_119 = $count;
 			}
 
-			if($input_dir eq "$cti_www/Data2000"){
+			if($input_dir eq "$data_dir/Data2000"){
 					@time_2000  = @xbin;
 					@node0_2000 = @node0;
 					@node1_2000 = @node1;
@@ -213,7 +222,7 @@ sub ccd_plot{
 					$count_2000 = $count;
 			}
 
-			if($input_dir eq "$cti_www/Data7000"){
+			if($input_dir eq "$data_dir/Data7000"){
 					@time_7000  = @xbin;
 					@node0_7000 = @node0;
 					@node1_7000 = @node1;
@@ -226,7 +235,7 @@ sub ccd_plot{
 					$count_7000 = $count;
 			}
 
-			if($input_dir eq "$cti_www/Data_adjust"){
+			if($input_dir eq "$data_dir/Data_adjust"){
 					@time_adjust  = @xbin;
 					@node0_adjust = @node0;
 					@node1_adjust = @node1;
@@ -239,7 +248,7 @@ sub ccd_plot{
 					$count_adjust = $count;
 			}
 
-			if($input_dir eq "$cti_www/Data_cat_adjust"){
+			if($input_dir eq "$data_dir/Data_cat_adjust"){
 					@time_cat  = @xbin;
 					@node0_cat = @node0;
 					@node1_cat = @node1;
@@ -721,7 +730,7 @@ sub ccd_plot{
 		pgclos();
 		
 		$name = "$cti_www/".'Data_Plot/'."$elm".'_ccd'."$i".'_plot.gif';
-		system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  pgplot.ps| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $name");
+		system("echo ''|/opt/local/bin/gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  pgplot.ps| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $name");
 	}
 }
 
@@ -862,6 +871,10 @@ sub conv_date {
                 $acc_date += 3;
         }elsif($year > 2012) {
                 $acc_date += 4;
+        }elsif($year > 2016) {
+                $acc_date += 5;
+        }elsif($year > 2020) {
+                $acc_date += 6;
         }
 
         $acc_date += $day - 1;
@@ -919,7 +932,7 @@ sub group_plot_imaging {
         	$range = "img"."_range";
 	}
 
-	open(IN, "$cti_www/$house_keeping/Range_data/$range");
+	open(IN, "$house_keeping/Range_data/$range");
 	while(<IN>){
 		chomp $_;
 		@atemp = split(/\t/,$_);
@@ -938,7 +951,7 @@ sub group_plot_imaging {
 
                	foreach $input_in ('Data119', 'Data2000', 'Data7000', 'Data_adjust', 'Data_cat_adjust'){
 
-			$input_dir = "$cti_www/"."$input_in";
+			$input_dir = "$data_dir/"."$input_in";
 
 			@all_time =();
                 	@node_value = ();
@@ -1036,7 +1049,7 @@ sub group_plot_imaging {
                		ch_time_form();                         # changing time format to DOM
 
 
-	               if($input_dir eq "$cti_www/Data119"){
+	               if($input_dir eq "$data_dir/Data119"){
                               		@time_119  = @xbin;
                               		@node_119 = @node_value;
                               		@err_119  = @node_sigma;
@@ -1048,7 +1061,7 @@ sub group_plot_imaging {
                		}
 
 
-       	       		if($input_dir eq "$cti_www/Data2000"){
+       	       		if($input_dir eq "$data_dir/Data2000"){
                               		@time_2000  = @xbin;
                               		@node_2000 = @node_value;
                               		@err_2000  = @node_sigma;
@@ -1060,7 +1073,7 @@ sub group_plot_imaging {
                		}
 
 		
-       	       		if($input_dir eq "$cti_www/Data7000"){
+       	       		if($input_dir eq "$data_dir/Data7000"){
                               		@time_7000  = @xbin;
                               		@node_7000 = @node_value;
                               		@err_7000  = @node_sigma;
@@ -1072,7 +1085,7 @@ sub group_plot_imaging {
                		}
 
 
-       	       		if($input_dir eq "$cti_www/Data_adjust"){
+       	       		if($input_dir eq "$data_dir/Data_adjust"){
                               		@time_adjust  = @xbin;
                               		@node_adjust = @node_value;
                               		@err_adjust  = @node_sigma;
@@ -1084,7 +1097,7 @@ sub group_plot_imaging {
                		}
 		
 		
-	        	if($input_dir eq "$cti_www/Data_cat_adjust"){
+	        	if($input_dir eq "$data_dir/Data_cat_adjust"){
                               		@time_cat  = @xbin;
                               		@node_cat = @node_value;
                              		@err_cat  = @node_sigma;
@@ -1236,7 +1249,7 @@ sub group_plot_imaging {
 		pgclos();
 		
 		$name = "$cti_www/".'Data_Plot/ACIS-I_'."$elem".'.gif';
-		system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  pgplot.ps| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $name");
+		system("echo ''|/opt/local/bin/gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  pgplot.ps| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $name");
 
 
         }
@@ -1264,7 +1277,7 @@ sub group_plot_spec_wo_bi {
         	$range = "spec2"."_range";
 	}
 
-	open(IN, "$cti_www/$house_keeping/Range_data/$range");
+	open(IN, "$house_keeping/Range_data/$range");
 	while(<IN>){
 		chomp $_;
 		@atemp = split(/\t/,$_);
@@ -1283,7 +1296,7 @@ sub group_plot_spec_wo_bi {
 
                	foreach $input_in ('Data119', 'Data2000', 'Data7000', 'Data_adjust', 'Data_cat_adjust'){
 
-			$input_dir = "$cti_www/"."$input_in";
+			$input_dir = "$data_dir/"."$input_in";
 
 			@all_time =();
                 	@node_value = ();
@@ -1381,7 +1394,7 @@ sub group_plot_spec_wo_bi {
                		ch_time_form();                         # changing time format to DOM
 
 
-	               if($input_dir eq "$cti_www/Data119"){
+	               if($input_dir eq "$data_dir/Data119"){
                               		@time_119  = @xbin;
                               		@node_119 = @node_value;
                               		@err_119  = @node_sigma;
@@ -1393,7 +1406,7 @@ sub group_plot_spec_wo_bi {
                		}
 
 
-       	       		if($input_dir eq "$cti_www/Data2000"){
+       	       		if($input_dir eq "$data_dir/Data2000"){
                               		@time_2000  = @xbin;
                               		@node_2000 = @node_value;
                               		@err_2000  = @node_sigma;
@@ -1405,7 +1418,7 @@ sub group_plot_spec_wo_bi {
                		}
 
 		
-       	       		if($input_dir eq "$cti_www/Data7000"){
+       	       		if($input_dir eq "$data_dir/Data7000"){
                               		@time_7000  = @xbin;
                               		@node_7000 = @node_value;
                               		@err_7000  = @node_sigma;
@@ -1417,7 +1430,7 @@ sub group_plot_spec_wo_bi {
                		}
 
 
-       	       		if($input_dir eq "$cti_www/Data_adjust"){
+       	       		if($input_dir eq "$data_dir/Data_adjust"){
                               		@time_adjust  = @xbin;
                               		@node_adjust = @node_value;
                               		@err_adjust  = @node_sigma;
@@ -1429,7 +1442,7 @@ sub group_plot_spec_wo_bi {
                		}
 		
 		
-	        	if($input_dir eq "$cti_www/Data_cat_adjust"){
+	        	if($input_dir eq "$data_dir/Data_cat_adjust"){
                               		@time_cat  = @xbin;
                               		@node_cat = @node_value;
                              		@err_cat  = @node_sigma;
@@ -1581,7 +1594,7 @@ sub group_plot_spec_wo_bi {
 		pgclos();
 		
 		$name = "$cti_www/".'Data_Plot/ACIS-S_w_o_BI_'."$elem".'.gif';
-		system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  pgplot.ps| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $name");
+		system("echo ''|/opt/local/bin/gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  pgplot.ps| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $name");
 
 
         }
@@ -1609,7 +1622,7 @@ sub group_plot_spec_bi {
         	$range = "img"."_range";
 	}
 
-	open(IN, "$cti_www/$hosue_keeping/Range_data/$range");
+	open(IN, "$house_keeping/Range_data/$range");
 	while(<IN>){
 		chomp $_;
 		@atemp = split(/\t/,$_);
@@ -1628,7 +1641,7 @@ sub group_plot_spec_bi {
 
                	foreach $input_in ('Data119', 'Data2000', 'Data7000', 'Data_adjust', 'Data_cat_adjust'){
 
-			$input_dir = "$cti_www/"."$input_in";
+			$input_dir = "$data_dir/"."$input_in";
 
 			@all_time =();
                 	@node_value = ();
@@ -1702,7 +1715,7 @@ sub group_plot_spec_bi {
                		ch_time_form();                         # changing time format to DOM
 
 
-	               if($input_dir eq "$cti_www/Data119"){
+	               if($input_dir eq "$data_dir/Data119"){
                               		@time_119  = @xbin;
                               		@node_119 = @node_value;
                               		@err_119  = @node_sigma;
@@ -1714,7 +1727,7 @@ sub group_plot_spec_bi {
                		}
 
 
-       	       		if($input_dir eq "$cti_www/Data2000"){
+       	       		if($input_dir eq "$data_dir/Data2000"){
                               		@time_2000  = @xbin;
                               		@node_2000 = @node_value;
                               		@err_2000  = @node_sigma;
@@ -1726,7 +1739,7 @@ sub group_plot_spec_bi {
                		}
 
 		
-       	       		if($input_dir eq "$cti_www/Data7000"){
+       	       		if($input_dir eq "$data_dir/Data7000"){
                               		@time_7000  = @xbin;
                               		@node_7000 = @node_value;
                               		@err_7000  = @node_sigma;
@@ -1738,7 +1751,7 @@ sub group_plot_spec_bi {
                		}
 
 
-       	       		if($input_dir eq "$cti_www/Data_adjust"){
+       	       		if($input_dir eq "$data_dir/Data_adjust"){
                               		@time_adjust  = @xbin;
                               		@node_adjust = @node_value;
                               		@err_adjust  = @node_sigma;
@@ -1750,7 +1763,7 @@ sub group_plot_spec_bi {
                		}
 		
 		
-	        	if($input_dir eq "$cti_www/Data_cat_adjust"){
+	        	if($input_dir eq "$data_dir/Data_cat_adjust"){
                               		@time_cat  = @xbin;
                               		@node_cat = @node_value;
                              		@err_cat  = @node_sigma;
@@ -1901,8 +1914,8 @@ sub group_plot_spec_bi {
 		pgsci(1);
 		pgclos();
 		
-		$name = "$cti_www/".'Data_Plot/BackSide_'."$ccd".'_'."$elem".'.gif';
-		system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  pgplot.ps| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $name");
+		$name = "$data_dir/".'Data_Plot/BackSide_'."$ccd".'_'."$elem".'.gif';
+		system("echo ''|/opt/local/bin/gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  pgplot.ps| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $name");
 
 
         }

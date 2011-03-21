@@ -8,23 +8,32 @@ use PGPLOT;
 #		    and Int time > 7000 sec, and temp adjucted plot)	#
 #									#
 #	author: T. Isobe (tisobe@cfa.harvard.edu)			#
-#	last update: Aug 10, 2004					#
+#	last update: Mar 10, 2011					#
 #									#
 #########################################################################
 
 #########################################
 #--- set directories
 #
-$in_list  = `cat ./dir_list`;
-@dir_list = split(/\s+/, $in_list);
+open(FH, "/data/mta/Script/ACIS/CTI/house_keeping/dir_list");
+@dir_list = ();
+OUTER:
+while(<FH>){
+        if($_ =~ /#/){
+                next OUTER;
+        }
+        chomp $_;
+        push(@dir_list, $_);
+}
+close(FH);
 
-$cti_www       = $dir_list[0];
+$bin_dir       = $dir_list[0];
+$bin_data      = $dir_list[1];
+$cti_www       = $dir_list[2];
+$data_dir      = $dir_list[3];
+$house_keeping = $dir_list[4];
+$exc_dir       = $dir_list[5];
 
-$house_keeping = $dir_list[1];
-
-$exc_dir       = $dir_list[2];
-
-$bin_dir       = $dir_list[3];
 #
 #########################################
 
@@ -44,7 +53,7 @@ sub ccd_plot{
 		$range = "$elm"."_range";
 	}
 	
-	open(FH,"$cti_www/$hosue_keeping/Range_data/$range");
+	open(FH,"$house_keeping/Range_data/$range");
 	$cno = 0;
 	OUTER:
 	while(<FH>) {
@@ -65,7 +74,7 @@ sub ccd_plot{
 	for($i = 3; $i < 4 ; $i++) {			# al, ti, and mn
 		foreach $input_in( 'Det_Data2000', 'Det_Data7000', 'Det_Data_adjust'){
 
-			$input_dir = "$cti_www/"."$input_in";
+			$input_dir = "$data_dir"."$input_in";
 
 			$count = 0;
 			@time_list = ();
@@ -186,7 +195,7 @@ sub ccd_plot{
 			}
 
 
-			if($input_dir eq "$cti_www/Det_Data2000"){
+			if($input_dir eq "$data_dir/Det_Data2000"){
 					@time_2000  = @xbin;
 					@node0_2000 = @node0;
 					@node1_2000 = @node1;
@@ -199,7 +208,7 @@ sub ccd_plot{
 					$count_2000 = $count;
 			}
 
-			if($input_dir eq "$cti_www/Det_Data7000"){
+			if($input_dir eq "$data_dir/Det_Data7000"){
 					@time_7000  = @xbin;
 					@node0_7000 = @node0;
 					@node1_7000 = @node1;
@@ -212,7 +221,7 @@ sub ccd_plot{
 					$count_7000 = $count;
 			}
 
-			if($input_dir eq "$cti_www/Det_Data_adjust"){
+			if($input_dir eq "$data_dir/Det_Data_adjust"){
 					@time_adjust  = @xbin;
 					@node0_adjust = @node0;
 					@node1_adjust = @node1;
@@ -342,7 +351,7 @@ sub ccd_plot{
 		pgclos();
 		
 		$name = "$cti_www".'/Det_Plot/example_ccd3_node0_mn.gif';
-		system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  pgplot.ps| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $name");
+		system("echo ''|/opt/local/bin/gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  pgplot.ps| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $name");
 		system("rm pgplot.ps");
 	}
 }
@@ -484,6 +493,10 @@ sub conv_date {
                 $acc_date += 3;
         }elsif($year > 2012) {
                 $acc_date += 4;
+        }elsif($year > 2016) {
+                $acc_date += 5;
+        }elsif($year > 2020) {
+                $acc_date += 6;
         }
 
         $acc_date += $day - 1;

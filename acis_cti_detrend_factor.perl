@@ -18,57 +18,67 @@ use PGPLOT;
 #										#
 #	author: Takashi Isobe (tisobe@cfa.harvard.edu)				#
 #										#
-#	last update: Aug 10, 2004						#
+#	last update: Mar 09, 2011						#
 #										#
 #################################################################################
 
 #########################################
 #--- set directories
 #
-$in_list  = `cat ./dir_list`;
-@dir_list = split(/\s+/, $in_list);
+open(FH, "/data/mta/Script/ACIS/CTI/house_keeping/dir_list");
+@dir_list = ();
+OUTER:
+while(<FH>){
+        if($_ =~ /#/){
+                next OUTER;
+        }
+        chomp $_;
+        push(@dir_list, $_);
+}
+close(FH);
 
-$cti_www       = $dir_list[0];
+$bin_dir       = $dir_list[0];
+$bin_data      = $dir_list[1];
+$cti_www       = $dir_list[2];
+$data_dir      = $dir_list[3];
+$house_keeping = $dir_list[4];
+$exc_dir       = $dir_list[5];
 
-$house_keeping = $dir_list[1];
-
-$exc_dir       = $dir_list[2];
-
-$bin_dir       = $dir_list[3];
 #
 #########################################
 
-$bdat_dir = '/data/mta/MTA/data/';
-
-$dare   =`cat $bdat_dir/.dare`;
-$hakama =`cat $bdat_dir/.hakama`;
+$dare   =`cat $bin_data/.dare`;
+$hakama =`cat $bin_data/.hakama`;
 chomp $dare;
 chomp $hakama;
 
 #system("cp $exc_dir/Working_dir/test_list       $exc_dir/Working_dir/test_list~");	# make backups
 #system("cp $exc_dir/Working_dir/new_entry       $exc_dir/Working_dir/new_entry~");
-system("cp $cti_www/$house_keeping/amp_avg_list $cti_www/$house_keeping/amp_avg_list~");	
+system("cp $house_keeping/amp_avg_list $house_keeping/amp_avg_list~");	
 
 #
 #----- new_entry: today's entry list from plot_cti.perl
 #
+
 system("cat $exc_dir/Working_dir/new_entry > $exc_dir/Working_dir/test_list");
+
 #---- combine left over and a new list
-#
-system("cat $cti_www/$house_keeping/keep_entry >> $exc_dir/Working_dir/test_list");
+#	
+
+system("cat $house_keeping/keep_entry >> $exc_dir/Working_dir/test_list");
 
 #
 #--- amp_avg_list is a list of detrend factors
 #
 
-open(FH,"$cti_www/$hosue_keeping/amp_avg_list");
+open(FH,"$house_keeping/amp_avg_list");
 
 $amp_cnt = 0;
 @amp_obsid = ();
 while(<FH>){
 	chomp $_;
 	@atemp = split(/\s+/,$_);
-	push(@amp_obsid, $atemp[2]);	# we need obsid list from amp_avg_list
+	push(@amp_obsid, $atemp[2]);				# we need obsid list from amp_avg_list
 	$amp_cnt++;
 }
 close(FH);
@@ -76,27 +86,29 @@ close(FH);
 $in_count = 0;
 @new_entry = ();
 open(FH,"$exc_dir/Working_dir/test_list");
+
 OUTER:
-while(<FH>) {				# compare amp_avg_list and today's data and find
-	chomp $_;			# data which are not processed yet.
+while(<FH>) {							# compare amp_avg_list and today's data and find
+	chomp $_;						# data which are not processed yet.
 	$obsid =  $_;
 	foreach $comp (@amp_obsid){
 		if($obsid == $comp){
 			next OUTER;
 		}
 	}
-	push(@new_entry, $obsid);	# @new_entry: data list to be processed
+	push(@new_entry, $obsid);				# @new_entry: data list to be processed
 	$in_count++;
 }
 close(FH);
 
-					# if there are new data, go ahead
+								# if there are new data, go ahead
 if($in_count > 0) {
-	@new_time_list = sort{$a<=>$b}  @new_entry; # here we clean up data. sorted and remove duplicates
+	@new_time_list = sort{$a<=>$b}  @new_entry; 		# here we clean up data. sorted and remove duplicates
 	rm_dupl();
-	@new_entry = @new_data;			# this is output from rm_dupl();
+	@new_entry = @new_data;					# this is output from rm_dupl();
 
 	$chk = `ls $exc_dir/Working_dir/`;
+
 	if($chk =~ /tempdir/){
 		$chk2 = `ls $exc_dir/Working_dir/tempdir/`;
 		if($chk2 =~ /fits/){
@@ -107,6 +119,7 @@ if($in_count > 0) {
 	}
 
 	open(OUT,">$exc_dir/Working_dir/input_line");		# input for arc4gl
+
 	foreach $obsid (@new_entry){
 		print OUT "operation=retrieve\n";
 		print OUT "dataset=flight\n";
@@ -130,7 +143,7 @@ if($in_count > 0) {
 	system("gzip -d $exc_dir/Working_dir/tempdir/*.gz");
 
 	$in_list = `ls $exc_dir/Working_dir/tempdir/acisf*stat*.fits*`;
-	@tempdir_list = split(/\s+/, $in_list);		# checking whether tempdir_list is empty or not
+	@tempdir_list = split(/\s+/, $in_list);			# checking whether tempdir_list is empty or not
 	@chk_list = ();
 
 	foreach $fits_file (@tempdir_list) {
@@ -139,7 +152,7 @@ if($in_count > 0) {
         	@ctemp = split(/_/, $btemp[1]);
         	$obsid = $ctemp[0];
 		push(@chk_list, $obsid);
-		                                        # get a date from the fits file
+		                                        	# get a date from the fits file
 
 		system("dmlist $fits_file opt=head outfile=$exc_dir/Working_dir/outfile");
 
@@ -176,10 +189,11 @@ if($in_count > 0) {
 		}
 		close(FH);
 	
-	  	open(AOUT,">>$cti_www/$house_keeping/amp_avg_list"); 	#output into amp_avg_list
+	  	open(AOUT,">>$house_keeping/amp_avg_list"); 		#output into amp_avg_list
+
         	if($count > 0) {
                 	$avg = $sum/$count;
-			$norm_avg = $avg * 0.00323;	# new value from cgrant  (03/07/05)
+			$norm_avg = $avg * 0.00323;			# new value from cgrant  (03/07/05)
 	
                 	print AOUT "$date_obs\t$norm_avg\t$obsid\n";
 #                	print "$date_obs:       $obsid  $norm_avg\n";
@@ -188,15 +202,15 @@ if($in_count > 0) {
 #                	print "$date_obs:       $obsid  NOT A STANDARD\n";
         	}
         	close(AOUT);
-		system(" rm $exc_dir/Working_dir/ztemp");
+		system("rm $exc_dir/Working_dir/ztemp");
 	
 	}
 	close(DATIN);
 
 	system("rm -rf  $exc_dir/Working_dir/tempdir");
 
-      	open(BOUT,">$cti_www/$house_keeping/keep_entry");	# find whether any data was not processedw
-	OUTER:							# if there are, keep them for the next time
+      	open(BOUT,">$house_keeping/keep_entry");			# find whether any data was not processedw
+	OUTER:								# if there are, keep them for the next time
 	foreach $new (@new_entry){
 		foreach $tmp (@chk_list) {
 			if($new eq $tmp){
@@ -209,9 +223,10 @@ if($in_count > 0) {
 	}
 	close(BOUT);
 
-	open(FH,"$cti_www/$house_keep/keep_entry");		# just in a case, clean up keep_entry file
+	open(FH,"$house_keeping/keep_entry");				# just in a case, clean up keep_entry file
 	$l_count = 0;
 	@temp_line = ();
+
 	while(<FH>) {
         	chomp $_;
         	push(@temp_line, $_);
@@ -232,14 +247,14 @@ if($in_count > 0) {
                 	push(@clean_line, $ent);
         	}
 	
-        	open(FH, ">$cti_www/$house_keeping/keep_entry");
+        	open(FH, ">$house_keeping/keep_entry");
         	foreach $ent (@clean_line) {
                 	print FH "$ent\n";
         	}
         	close(FH);
 	
 	}
-	open(FH,"$cti_www/$house_keeping/amp_avg_list");	# now clean up am_avg_list
+	open(FH,"$house_keeping/amp_avg_list");	# now clean up am_avg_list
 	@amp_test = ();
 	while(<FH>){
 		chomp $_;
@@ -249,9 +264,9 @@ if($in_count > 0) {
 	@new_time_list = sort{$a<=>$b} @amp_test;
 	@new_time_list = reverse(@new_time_list);
        	$first_line = shift(@new_time_list);
-        @new_data = ("$first_line");			# since there are often more than one entry
-							# for a sane obsid (processed more than once)
-        OUTER:						# choose the most recent value
+        @new_data = ("$first_line");					# since there are often more than one entry
+									# for a sane obsid (processed more than once)
+        OUTER:								# choose the most recent value
         foreach $line (@new_time_list) {
 		@atemp = split(/\t/,$line);
                 foreach $comp (@new_data) {
@@ -264,13 +279,14 @@ if($in_count > 0) {
         }
 	@new_data = reverse(@new_data);
 
-	open(OUT,">$cti_www/$house_keeping/amp_avg_list");	# update am_avg_list
+	open(OUT,">$house_keeping/amp_avg_list");			# update am_avg_list
 	foreach $ent(@new_data){
 		print OUT "$ent\n";
 	}
 	close(OUT);
-	system("sort $cti_www/$house_keeping/amp_avg_list > ./Working_dir/atemp");
-	system("mv  ./Working_dir/atemp $cti_www/$house_keeping/amp_avg_list");
+
+	system("sort $house_keeping/amp_avg_list > ./Working_dir/atemp");
+	system("mv  ./Working_dir/atemp $house_keeping/amp_avg_list");
 }
 
 ######################################################

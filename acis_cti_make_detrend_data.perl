@@ -5,7 +5,7 @@
 # make_detrend_data.perl: add detrend correction and create new dataset	#
 #									#
 #	author: T. Isobe (tisobe@cfa.harvard.edu)			#
-#	last update: Agu 10, 2005					#
+#	last update: Mar 10, 2011					#
 #		modified to fit a new directry system			#
 #									#
 #########################################################################
@@ -13,20 +13,29 @@
 #########################################
 #--- set directories
 #
-$in_list  = `cat ./dir_list`;
-@dir_list = split(/\s+/, $in_list);
+open(FH, "/data/mta/Script/ACIS/CTI/house_keeping/dir_list");
+@dir_list = ();
+OUTER:
+while(<FH>){
+        if($_ =~ /#/){
+                next OUTER;
+        }
+        chomp $_;
+        push(@dir_list, $_);
+}
+close(FH);
 
-$cti_www       = $dir_list[0];
+$bin_dir       = $dir_list[0];
+$bin_data      = $dir_list[1];
+$cti_www       = $dir_list[2];
+$data_dir      = $dir_list[3];
+$house_keeping = $dir_list[4];
+$exc_dir       = $dir_list[5];
 
-$house_keeping = $dir_list[1];
-
-$exc_dir       = $dir_list[2];
-
-$bin_dir       = $dir_list[3];
 #
 #########################################
 
-open(FH, "$cti_www/$house_keeping/amp_avg_list");		#read correciton factors
+open(FH, "$house_keeping/amp_avg_list");		#read correciton factors
 @obsid_list = ();
 while(<FH>){
 	chomp $_;
@@ -38,8 +47,8 @@ close(FH);
 
 foreach $peak ('al', 'mn', 'ti'){
 	foreach $iccd (0, 1, 2, 3, 4, 6, 8, 9){		         # imaging CCDs only
-		$file     = "$cti_www//Results/"."$peak".'_ccd'."$iccd";
-		$out_file = "$cti_www/Det_Results/"."$peak".'_ccd'."$iccd";
+		$file     = "$data_dir/Results/"."$peak".'_ccd'."$iccd";
+		$out_file = "$data_dir/Det_Results/"."$peak".'_ccd'."$iccd";
 
 		open(FH,"$file");
 		open(OUT,">$out_file");

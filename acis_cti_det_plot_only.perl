@@ -6,22 +6,31 @@ use PGPLOT;
 # det_plot_only.perl: a plot routine for detrended data			#
 #									#
 #	author: T. Isobe (tisobe@cfa.harvard.edu)			#
-#	Last update: aug 10, 2005					#
+#	Last update: Mar 11, 2011					#
 #########################################################################
 
 #########################################
 #--- set directories
 #
-$in_list  = `cat ./dir_list`;
-@dir_list = split(/\s+/, $in_list);
+open(FH, "/data/mta/Script/ACIS/CTI/house_keeping/dir_list");
+@dir_list = ();
+OUTER:
+while(<FH>){
+        if($_ =~ /#/){
+                next OUTER;
+        }
+        chomp $_;
+        push(@dir_list, $_);
+}
+close(FH);
 
-$cti_www       = $dir_list[0];
+$bin_dir       = $dir_list[0];
+$bin_data      = $dir_list[1];
+$cti_www       = $dir_list[2];
+$data_dir      = $dir_list[3];
+$house_keeping = $dir_list[4];
+$exc_dir       = $dir_list[5];
 
-$house_keeping = $dir_list[1];
-
-$exc_dir       = $dir_list[2];
-
-$bin_dir       = $dir_list[3];
 #
 #########################################
 
@@ -31,7 +40,7 @@ $input_dir = $ARGV[0];
 @atemp = split(/Data/, $input_dir);
 $plot_dir = "$cti_www/".'Det_Plot'."$atemp[1]";
 
-$input_dir = "$cti_www/"."$input_dir";
+$input_dir = "$data_dir/"."$input_dir";
 chomp $input_dir;
 
 ccd_plot(al);					# plotting the data
@@ -109,7 +118,7 @@ sub ccd_plot{
 		$range = "$elm"."_range";
 	}
 	
-	open(FH,"$cti_www/$house_keeping/Range_data/$range");
+	open(FH,"$house_keeping/Range_data/$range");
 	$cno = 0;
 	OUTER:
 	while(<FH>) {
@@ -304,7 +313,7 @@ sub ccd_plot{
 		}else{
 			$out_plot = "$plot_dir/"."$elm". "_ccd"."$i"."_plot.gif";
 		} 
-		system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|$bin_dir/pnmcrop| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $out_plot");
+		system("echo ''|/opt/local/bin/gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|$bin_dir/pnmcrop| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $out_plot");
 
 		system("rm pgplot.ps");
 	}
@@ -451,6 +460,10 @@ sub conv_date {
                 $acc_date += 3;
         }elsif($year > 2012) {
                 $acc_date += 4;
+        }elsif($year > 2016) {
+                $acc_date += 5;
+        }elsif($year > 2020) {
+                $acc_date += 6;
         }
 
         $acc_date += $day - 1;
@@ -550,7 +563,7 @@ sub group_plot_imaging {
         	$range = "img"."_range";
 	}
 
-	open(IN, "$cti_www/$hosue_keeping/Range_data/$range");
+	open(IN, "$house_keeping/Range_data/$range");
 	while(<IN>){
 		chomp $_;
 		@atemp = split(/\t/,$_);
@@ -731,7 +744,7 @@ sub group_plot_imaging {
                 	$out_plot = "$plot_dir/"."Imaging_"."$elem".'.gif';
 		} 
 
-		system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|$bin_dir/pnmcrop| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $out_plot");
+		system("echo ''|/opt/local/bin/gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|$bin_dir/pnmcrop| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $out_plot");
 
 		system("rm pgplot.ps");
         }
@@ -742,7 +755,7 @@ sub group_plot_imaging {
         foreach(@xbin){
                 $tcont++;
         }
-        open(OUT,">$cti_www/$house_keeping/detrended_data");
+        open(OUT,">$house_keeping/detrended_data");
         for($ti = 0;$ti < $tcont; $ti++){
                 print OUT "$xbin[$ti]\t$ybin[$ti]\n";
         }
@@ -772,7 +785,7 @@ sub group_plot_spectral {
                 $range = "spec"."_range";
         }
 
-        open(IN, "$cti_www/$house_keeping/Range_data/$range");
+        open(IN, "$house_keeping/Range_data/$range");
 
         while(<IN>){
                 chomp $_;
@@ -928,7 +941,7 @@ sub group_plot_spectral {
                 	$out_plot = "$plot_dir/"."Spec_"."$elem".'.gif';
 		}
 
-		system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|$bin_dir/pnmcrop| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $out_plot");
+		system("echo ''|/opt/local/bin/gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|$bin_dir/pnmcrop| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $out_plot");
 
 		system("rm pgplot.ps");
         }
@@ -956,7 +969,7 @@ sub group_plot_spec_wo_bi {
                 $range = "spec2"."_range";
         }
 
-        open(IN, "$cti_www/$house_keeping/Range_data/$range");
+        open(IN, "$house_keeping/Range_data/$range");
 
         while(<IN>){
                 chomp $_;
@@ -1141,7 +1154,7 @@ sub group_plot_spec_wo_bi {
                 	$out_plot = "$plot_dir/"."ACIS-S_w_o_BI_"."$elem".'.gif';
 		}
 
-		system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|$bin_dir/pnmcrop| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $out_plot");
+		system("echo ''|/opt/local/bin/gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|$bin_dir/pnmcrop| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $out_plot");
 
 		system("rm pgplot.ps");
         }
@@ -1169,7 +1182,7 @@ sub group_plot_spec_bi {
                 $range = "bi"."_range";
         }
 
-        open(IN, "$cti_www/$house_keeping/Range_data/$range");
+        open(IN, "$house_keeping/Range_data/$range");
         while(<IN>){
                 chomp $_;
                 @atemp = split(/\t/,$_);
@@ -1323,7 +1336,7 @@ sub group_plot_spec_bi {
                 	$out_plot = "$plot_dir/"."BackSide_"."$ccd".'_'."$elem".'.gif';
 		}
 
-		system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|$bin_dir/pnmcrop| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $out_plot");
+		system("echo ''|/opt/local/bin/gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|$bin_dir/pnmcrop| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $out_plot");
 
                system("rm pgplot.ps");
         }

@@ -7,7 +7,7 @@
 #   this is just a combination of two script, previously separate	#
 #									#
 #	Author: T. Isobe (tisobe@cfa.harvard.edu)			#
-#	Last update: Aug 10, 2005					#
+#	Last update: Mar 09, 2011					#
 #		modified to fit a new directory system			#
 #									#
 #########################################################################
@@ -15,16 +15,26 @@
 #########################################
 #--- set directories
 #
-$in_list  = `cat ./dir_list`;
-@dir_list = split(/\s+/, $in_list);
+open(FH, "/data/mta/Script/ACIS/CTI/house_keeping/dir_list");
+@dir_list = ();
+OUTER:
+while(<FH>){
+        if($_ =~ /#/){
+                next OUTER;
+        }
+        chomp $_;
+        push(@dir_list, $_);
+}
+close(FH);
 
-$cti_www       = $dir_list[0];
 
-$house_keeping = $dir_list[1];
+$bin_dir       = $dir_list[0];
+$bin_data      = $dir_list[1];
+$cti_www       = $dir_list[2];
+$data_dir      = $dir_list[3];
+$house_keeping = $dir_list[4];
+$exc_dir       = $dir_list[5];
 
-$exc_dir       = $dir_list[2];
-
-$bin_dir       = $dir_list[3];
 #
 #########################################
 
@@ -41,9 +51,9 @@ foreach $file (@fits_list){
 	find_time_range();
 }
 
-system("cat $exc_dir/Working_dir/ztemp_range_list $cti_www/$house_keeping/obsid_list > $exc_dir/Working_dir/zobs_id_list");
-system("cp $cti_www/$house_keeping/obsid_list $cti_www/$house_keeping/obsid_list~");
-system("mv $exc_dir/Working_dir/zobs_id_list $cti_www/$house_keeping/obsid_list");
+system("cat $exc_dir/Working_dir/ztemp_range_list $house_keeping/obsid_list > $exc_dir/Working_dir/zobs_id_list");
+system("cp $house_keeping/obsid_list $house_keeping/obsid_list~");
+system("mv $exc_dir/Working_dir/zobs_id_list $house_keeping/obsid_list");
 system("mv $exc_dir/Working_dir/ztemp_range_list $exc_dir/Working_dir/temp_file");
 system("rm $exc_dir/Working_dir/zfits_test $exc_dir/Working_dir/ztemp_input");
 

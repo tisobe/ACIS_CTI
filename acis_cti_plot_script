@@ -4,8 +4,10 @@ cd /data/mta/Script/ACIS/CTI/Exc/
 rm -rf param
 mkdir param
 source /home/mta/bin/reset_param
-setenv PFILES "${PDIRS}:${SYSPFILES}" 
+setenv PFILES "${PDIRS}" 
 set path = (/home/ascds/DS.release/bin/  $path)
+set path = (/home/ascds/DS.release/ots/bin/ $path)
+
 setenv MTA_REPORT_DIR  /data/mta/Script/ACIS/CTI/Exc/Temp_comp_area
 
 /opt/local/bin/perl /data/mta/MTA/bin/acis_cti_run_all_script.perl
