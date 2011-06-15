@@ -1,4 +1,4 @@
-source /home/mta/.ascrc 
+source /home/mta/.ascrc -r /proj/cm/Integ/ots.build.linux.DS8.3
 
 cd /data/mta/Script/ACIS/CTI/Exc/
 rm -rf param

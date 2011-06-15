@@ -14,15 +14,13 @@ several directory locations.
 #########################################
 #--- set directories
 #
-$cti_www       = '/data/mat/www/mt_cti/';		All Results are saved here
-
-$house_keeping = '/house_keeping/';			Daily information about computation is kept here
-
-$exc_dir       = '/data/mta/Script/ACIS/CTI/Exc/';	This directory will be used for computation
-
-$bin_dir       = '/data/mta4/MTA/bin';			All script are kept here
-
-$ftools        = '/home/ascds/DS.release/otsbin/';	Ftool directory
+$bin_dir:	/data/mta/MTA/bin/
+$bin_data:	/data/mta/MTA/data/
+$cti_weww:	/data/mta/www/mta_cti/
+$data_dir:	/data/mta/Script/ACIS/CTI/Data/
+$house_keeping:	/data/mta/Script/ACIS/CTI/house_keeping/
+$exc_dir: 	/data/mta/Script/ACIS/CTI/Exc/
+~
 
 #
 #########################################
@@ -60,8 +58,8 @@ Input:
 							      data archive yet.
 
 Output:
-	/data/mta/Script/ACIS/CTI/Exc/Working_dir/new_entry:  a list of new and unprocessed entries
-	/data/mta/Script/ACIS/CTI/Exc/Working_dir/input_list: a list of all entries from begining updated
+	$exc_dir/Working_dir/new_entry:  a list of new and unprocessed entries
+	$exc_dir/Working_dir/input_list: a list of all entries from begining updated
 
 ----------------------
 acis_cti_get_data.perl
@@ -75,8 +73,8 @@ Input:
 	/data/mta/Script/ACIS/CTI/Exc/Working_dir/list:	list of obsids
 
 Output:
-	/data/mta/Script/ACIS/CTI/Exc/Working_dir/<acis evt1 fits file>
-	/data/mta/www/mta_cti/house_keepingkeep_entry:  a list of entries which are not in data archive
+	$exc_dir/Exc/Working_dir/<acis evt1 fits file>
+	$house_keepingkeep_entry:  a list of entries which are not in data archive
 								at this moment. keep for the future process
 
 
@@ -89,7 +87,7 @@ This scripts does two things:
 The scond process uses the output from the first process (Working_dir/ztemp_input). 
 	
 Input: 
-	/data/mta/Script/ACIS/CTI/Exc/Working_dir/acisf*fits:  acis evt1 data
+	$exc_dir/Working_dir/acisf*fits:  acis evt1 data
 	/data/mta/Script/Focal/Short_term:		       focal temp data
 
 Output:
@@ -108,12 +106,12 @@ This script computes cti for a given acis evt1 data for a given time range.
 	3. extract cti values from the product
 
 Input:
-	/data/mta/Script/ACIS/CTI/Exc/Working_dir/temp_file
+	$exc_dir/Working_dir/temp_file
 			this is same as ./Working_dir/ztemp_range_list
-	/data/mta/Script/ACIS/CTI/Exc/Working_dir/acisf*$obsid*evt1.fits
+	$exc_dir/Working_dir/acisf*$obsid*evt1.fits
 
 Output:
-	/data/mta/www/mta_cti/Results/<elm>_<ccd #>
+	$data_dir/Results/<elm>_<ccd #>
 
 Note: 	
 	The MTA_REPORT_DIR must be specified before running this script:
@@ -133,14 +131,14 @@ This script computes detrend factor using drop_amp data.
 Input:
 	.dare:		user name
 	.hakama:	pass word
-	/data/mta/Script/ACIS/CTI/Working_dir/new_etry:	a list of today's data
-	/data/mta/Script/ACIS/CTI/Working_dir/keep_entry:	a list of past un-processed data
-	/data/mta/Script/ACIS/CTI/Working_dir/amp_avg_list:	previously computed drop amp
-	//data/mta/Script/ACIS/CTI/Working_dir/tempdir/acisf*stat*.fits: 	
+	$exc_dir/Working_dir/new_etry:	a list of today's data
+	$exc_dir/Working_dir/keep_entry:	a list of past un-processed data
+	$exc_dir/Working_dir/amp_avg_list:	previously computed drop amp
+	$exc_dir/Working_dir/tempdir/acisf*stat*.fits: 	
 			-tempdir will be created wheile this computation si going.
 
 Output:
-	/data/mta/www/mta_cti/house_keeping/amp_avg_list: a drop amp correction factors
+	$house_keeping/amp_avg_list: a drop amp correction factors
 
 
 ------------------------
@@ -149,14 +147,14 @@ acis_cti_adjust_cti.perl
 This script creates several new data prducts from the cti computed.
 
 Input:
-	/data/mta/www/mta_cti/Results/<elem>_ccd<ccd #>
+	$data_dir/Results/<elem>_ccd<ccd #>
 
 Output:
-	/data/mta/www/mta_cti/Data119:         data with focal temp colder than -119.7
-	/data/mta/www/mta_cti/Data2000:        data with integration time no less than 2000
-	/data/mta/www/mta_cti/Data7000:        data with focal temp colder than -119.7 and 
+	$data_dir/Data119:         data with focal temp colder than -119.7
+	$data_dir/Data2000:        data with integration time no less than 2000
+	$data_dir/Data7000:        data with focal temp colder than -119.7 and 
 						 and the integration time is no less than 7000
-	/data/mta/www/mta_cti/Data_cat_adjust: data with integration time no less than 2000
+	$data_dir/Data_cat_adjust: data with integration time no less than 2000
 							and temp. dependency was corrected with
 							MIT/ACIS correction factors.
 
@@ -170,11 +168,11 @@ This script computes temperature correction factor, and applys it on data.
 	3. set intercept to zero so that the correction is zero at -119.7
 
 Input: 
-	/data/mta/www/mta_cti/Results/<elem>_ccd<ccd #>
+	$data_dir/Results/<elem>_ccd<ccd #>
 
 Output:
-	/data/mta/www/mta_cti/$elm_factor: 			a list of correction factors	
-	/data/mta/www/mta_cti/Data_adjust/<elem>_ccd<ccd #>:	corrected data.
+	$data_dir/$elm_factor: 			a list of correction factors	
+	$data_dir/Data_adjust/<elem>_ccd<ccd #>:	corrected data.
 
 Note:
 	if the integration time is less than 1000 sec, drop the data
@@ -188,11 +186,11 @@ acis_cti_find_outlayer.perl
 This script finds outlayer data points from data sets and remove them
 
 Input:
-	/data/mta/www/mta_cti/Data*/<elm>_ccd<ccd#>
+	$data_dir/Data*/<elm>_ccd<ccd#>
 
 Output:
-	/data/mta/www/mta_cti/Data*/dropped_data   -- a list of outlyers
-	/data/mta/www/mta_cti/Data*/bad_data_obsid -- a list of obsids of above
+	$data_dir/Data*/dropped_data   -- a list of outlyers
+	$data_dir/Data*/bad_data_obsid -- a list of obsids of above
 
 
 ------------------------
@@ -201,11 +199,11 @@ acis_cti_plot_only.perl
 This script plots time vs cti evolution 
 
 Input: 
-	/data/mta/www/mta_cti/Data*/<elm>_ccd<ccd#> --- plotting data
+	$data_dir/Data*/<elm>_ccd<ccd#> --- plotting data
 
 Output:
-	/data/mta/www/mta_cti/Plot*/<elm>_ccd<ccd#>_plot.gif
-	/data/mta/www/mta_cti/Plot*/fitting_result
+	$cti_www/Plot*/<elm>_ccd<ccd#>_plot.gif
+	$cit_www/Plot*/fitting_result
 
 Note:
 	The plots created by this script will not displayed on the cti web page.
@@ -221,12 +219,12 @@ This script adds detrend correction and creates a new dataset
 
 Input
 -----
-/data/mta/www/mta_cti/house_keeping/amp_avg_list  --- detrend correction factors
-/data/mta/www/mta_cti//Results/<elm>_ccd<ccd#>    --- original data
+	$house_keeping/amp_avg_list  --- detrend correction factors
+	$data_dir/Results/<elm>_ccd<ccd#>    --- original data
 
 Output
 ------
-/data/mta/www/mta_cti/Det_Results/<elm>_ccd<ccd#>
+	$data_dir/Det_Results/<elm>_ccd<ccd#>
 
 ----------------------------
 acis_cti_det_adjust_cti.perl
@@ -235,14 +233,14 @@ acis_cti_det_adjust_cti.perl
 This script creates several new data prducts from the detrended cti computed.
 
 Input:
-	/data/mta/www/mta_cti/Det_Results/<elem>_ccd<ccd #>
+	$data_dir/Det_Results/<elem>_ccd<ccd #>
 
 Output:
-	/data/mta/www/mta_cti/Det_Data119:        data with focal temp colder than -119.7
-	/data/mta/www/mta_cti/Det_Data2000:       data with integration time no less than 2000
-	/data/mta/www/mta_cti/Det_Data7000:       data with focal temp colder than -119.7 and 
+	$data_dir/mta_cti/Det_Data119:        data with focal temp colder than -119.7
+	$data_dir/Det_Data2000:       data with integration time no less than 2000
+	$data_dir/Det_Data7000:       data with focal temp colder than -119.7 and 
 						        and the integration time is no less than 7000
-	/data/mta/www/mta_cti/Det_Data_cat_adjust: data with integration time no less than 2000
+	$data_dir/Det_Data_cat_adjust: data with integration time no less than 2000
 							and temp. dependency was corrected with
 							MIT/ACIS correction factors.
 
@@ -255,10 +253,10 @@ The difference from plot_only.perl is that this script will plot multiple
 trends on one display plotting window.
 
 Input: 
-	/data/mta/www/mta_cti/Data*/<elm>_ccd<ccd#> --- plotting data
+	$data_dir/Data*/<elm>_ccd<ccd#> --- plotting data
 
 Output:
-	/data/mta/www/mta_cti/Data_plot/<elm>_ccd<ccd#>_plot.gif
+	$cti_www/mta_cti/Data_plot/<elm>_ccd<ccd#>_plot.gif
 
 --------------------------------
 acis_cti_new_det_plot_only.perl
@@ -269,10 +267,10 @@ The difference from det_plot_only.perl is that this script will plot multiple
 trends on one display plotting window.
 
 Input: 
-	/data/mta/www/mta_cti/Det_Data*/<elm>_ccd<ccd#> --- plotting data
+	$data_dir/Det_Data*/<elm>_ccd<ccd#> --- plotting data
 
 Output:
-	/data/mta/www/mta_cti/Det_plot/<elm>_ccd<ccd#>_plot.gif
+	$cti_www/Det_plot/<elm>_ccd<ccd#>_plot.gif
 
 
 ------------------------------------
@@ -284,10 +282,10 @@ integration time > 2000 sec, the second plot is the data with integration time >
 and the focal temp < -119.7C. the last one is temperature dependency corrected data.
 
 Input: 
-	/data/mta/www/mta_cti/Det_Data*/<elm>_ccd<ccd#> --- plotting data
+	$data_dir/Det_Data*/<elm>_ccd<ccd#> --- plotting data
 
 Output:
-	/data/mta/www/mta_cti/Det_plot/example_ccd3_node0_mn.gif
+	$cti_www/Det_plot/example_ccd3_node0_mn.gif
 
 
 
@@ -296,7 +294,7 @@ Output:
 Descriptions of directory
 #########################
 
-/data/mta/www/mta_cti/
+$data_dir:
 
 Data119			cti data screened for integration time >= 2000 sec, temperature <= -119.7.
 Data2000		cti data screened for integration time >= 2000 sec.
@@ -317,25 +315,12 @@ Det_Plot7000		plots of time vs detrended cti for Det_Data7000
 Det_Plot_adjust		plots of time vs detrended cti for Det_Data_adjust
 Det_Plot_cat_adjust	plots of time vs detrended cti for Det_Data_cat_adjust
 Det_Results		none-differentiated (by temp) detrended cti data
-Det_plot		plot of time vs detrended cti; multiple trends in one plotting window
-Old_data		old data not used for the current computation
-Plot119			plots of time vs cti for Data119
-Plot2000		plots of time vs cti for Data2000
-Plot7000		plots of time vs cti for Data7000
-Plot_adjust		plots of time vs cti for Data_adjust
-Plot_cat_adjust		plots of time vs cti for Data_cat_adjsut
 Results			none-differentiated (by temp) cti data
-house_keeping		keep all parameters which need to pass one computation to the other
-
-Files
------
-cti_page.html		cti web page; this will be copied to /data/mta/www/mta_cti/Adjusted
 al_factor		current temperature dependency correction factors for CCDs (al K alpha).
 mn_factor		current temperature dependency correction factors for CCDs (mn K alpha).
 ti_factor		current temperature dependency correction factors for CCDs (ti K alpha).
 
-
-/data/mta/www/mta_cti/house_keeping/
+$house_keeping:
 
 Range_data		keep plotting data range
 amp_avg_list		a list of  amp average list
@@ -345,6 +330,20 @@ input_list		a temporary list of input data list
 keep_entry		a list of obsid list. this data will be reanalyzed later
 obsid_list		a list of obsid, temperature, start time, stop time, interval time (all sec)
 temp_file		a list of the most recent temperature list (same as above)
+
+$cti_www:
+
+cti_page.html		cti web page; this will be copied to /data/mta/www/mta_cti/Adjusted
+
+Det_plot		plot of time vs detrended cti; multiple trends in one plotting window
+Old_data		old data not used for the current computation
+Plot119			plots of time vs cti for Data119
+Plot2000		plots of time vs cti for Data2000
+Plot7000		plots of time vs cti for Data7000
+Plot_adjust		plots of time vs cti for Data_adjust
+Plot_cat_adjust		plots of time vs cti for Data_cat_adjsut
+
+
 
 
 
